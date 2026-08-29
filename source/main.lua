@@ -11,6 +11,7 @@ jugador = {
     ancho,
     origen_x,
     origen_y,
+    velocidad = 50,
     sprite = nil
 
 }
@@ -35,14 +36,30 @@ function love.load()
     jugador.origen_x = jugador.ancho / 2
     jugador.origen_y = jugador.alto / 2
 
-
     jugador.x = ventana.ancho /2
     jugador.y = ventana.alto /2
     
 end
 
+function love.update(dt)
+    if love.keyboard.isDown("right") then
+        jugador.x = jugador.x + (jugador.velocidad * dt)
+    end
+    if love.keyboard.isDown("left") then
+        jugador.x = jugador.x - (jugador.velocidad * dt)
+    end
+    if love.keyboard.isDown("down") then
+        jugador.y = jugador.y + (jugador.velocidad * dt)
+    end
+    if love.keyboard.isDown("up") then
+        jugador.y = jugador.y - (jugador.velocidad * dt)
+    end
+    
+end
+
 function love.draw()
     love.graphics.setCanvas(lienzo)
+    love.graphics.clear()
     love.graphics.draw(jugador.sprite,jugador.x, jugador.y, 0,1,1,jugador.origen_x, jugador.origen_y)
     love.graphics.draw(enemigo.sprite, enemigo.x, enemigo.y, 0)
     love.graphics.setCanvas()
