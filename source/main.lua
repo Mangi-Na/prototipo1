@@ -19,6 +19,7 @@ jugador = {
 enemigo = {
     y = 100,
     x = 100,
+    velocidad = 72,
     sprite = nil
 
 }
@@ -44,18 +45,39 @@ end
 function love.update(dt)
     if love.keyboard.isDown("right") then
         jugador.x = jugador.x + (jugador.velocidad * dt)
-    end
-    if love.keyboard.isDown("left") then
+    elseif love.keyboard.isDown("left") then
         jugador.x = jugador.x - (jugador.velocidad * dt)
-    end
-    if love.keyboard.isDown("down") then
+    elseif love.keyboard.isDown("down") then
         jugador.y = jugador.y + (jugador.velocidad * dt)
-    end
-    if love.keyboard.isDown("up") then
+    elseif love.keyboard.isDown("up") then
         jugador.y = jugador.y - (jugador.velocidad * dt)
+    end
+    --persecucion
+
+    local dist_x = math.abs(enemigo.x - jugador.x)
+    local dist_y = math.abs(enemigo.y - jugador.y)
+    
+    if dist_x > dist_y then
+       if dist_x > 20 then
+          if enemigo.x < jugador.x then
+              enemigo.x = enemigo.x + (enemigo.velocidad * dt)
+              elseif enemigo.x > jugador.x then
+              enemigo.x = enemigo.x - (enemigo.velocidad * dt)
+          end
+      end
+        
+      if dist_y > 25 then
+           if enemigo.y < jugador.y then
+             enemigo.y = enemigo.y + (enemigo.velocidad * dt)
+             elseif enemigo.y > jugador.y then
+             enemigo.y = enemigo.y - (enemigo.velocidad * dt)
+          end
+        end   
     end
     
 end
+
+
 
 function love.draw()
     love.graphics.setCanvas(lienzo)
