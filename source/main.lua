@@ -1,36 +1,13 @@
+require "jugador"
+require "enemigo"
+
 ventana = {
     ancho = 160,
     alto = 144,
     escala = 4
 }
 
-jugador = {
-    y = 0,
-    x = 0,
-    alto,
-    ancho,
-    origen_x,
-    origen_y,
-    hitbox_x = 0,
-    hitbox_y = 0,
-    velocidad = 50,
-    sprite = nil
-
-}
-
-enemigo = {
-    y = 100,
-    x = 100,
-    alto,
-    ancho,
-    origen_x,
-    origen_y,
-    hitbox_x = 0,
-    hitbox_y = 0,
-    velocidad = 72,
-    sprite = nil
-
-}
+atrapado = false
 
 function comprobarColision(x1, y1, ancho1, alto1, x2, y2, ancho2, alto2)
     return x1 < x2 + ancho2 and 
@@ -43,24 +20,8 @@ function love.load()
     love.window.setMode(ventana.ancho * ventana.escala, ventana.alto * ventana.escala)
     love.graphics.setDefaultFilter("nearest","nearest")
     lienzo = love.graphics.newCanvas(ventana.ancho, ventana.alto)
-    jugador.sprite = love.graphics.newImage("assets/payaso.png")
-    enemigo.sprite = love.graphics.newImage("assets/rojo.png")
-
-    --alto y ancho
-    jugador.ancho = jugador.sprite:getWidth()
-    jugador.alto = jugador.sprite:getHeight()
-    enemigo.ancho = jugador.sprite:getWidth()
-    enemigo.alto = jugador.sprite:getHeight()
-
-    --calcular centro
-    jugador.origen_x = jugador.ancho / 2
-    jugador.origen_y = jugador.alto / 2
-    enemigo.origen_x = jugador.ancho / 2
-    enemigo.origen_y = jugador.alto / 2
-
-    jugador.x = ventana.ancho /2
-    jugador.y = ventana.alto /2
-    
+    jugador.Crear(ventana.ancho/2, ventana.alto/2)
+    enemigo.Crear() 
 end
 
 function love.update(dt)
@@ -73,6 +34,7 @@ function love.update(dt)
     elseif love.keyboard.isDown("up") then
         jugador.y = jugador.y - (jugador.velocidad * dt)
     end
+    
     --persecucion
 
     local dist_x = math.abs(enemigo.x - jugador.x)
@@ -101,6 +63,18 @@ function love.update(dt)
     jugador.hitbox_y = jugador.y - jugador.origen_y
     enemigo.hitbox_x = enemigo.x - enemigo.origen_x
     enemigo.hitbox_y = enemigo.y - enemigo.origen_y
+
+    -- Verificar colision AABB
+    atrapado = comprobarColision(
+        jugador.hitbox_x,
+        jugador.hitbox_y,
+        jugador.ancho,
+        jugador.alto,
+        enemigo.hitbox_x,
+        enemigo.hitbox_y,
+        enemigo.ancho,
+        enemigo.alto
+    )
     
 end
 
@@ -114,5 +88,9 @@ function love.draw()
     love.graphics.setCanvas()
 
     love.graphics.draw(lienzo,0,0,0,ventana.escala,ventana.escala)
+
+    if atrapado then
+        love.graphics.print("ATRAPADO",100,10)        
+    end
     
 end
