@@ -22,7 +22,7 @@ function jugador.Crear(x, y)
     jugador.y = y
 end
 
--- AHORA MANEJA EL MOVIMIENTO AQUÍ
+-- MANEJA EL MOVIMIENTO
 function jugador.Actualizar(dt)
     if love.keyboard.isDown("right") then
         jugador.x = jugador.x + (jugador.velocidad * dt)
@@ -34,7 +34,7 @@ function jugador.Actualizar(dt)
         jugador.y = jugador.y - (jugador.velocidad * dt)
     end
 
-    -- Actualiza su propia hitbox tras moverse
+    -- hitbox 
     jugador.hitbox_x = jugador.x - jugador.origen_x
     jugador.hitbox_y = jugador.y - jugador.origen_y
 end

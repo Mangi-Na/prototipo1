@@ -23,25 +23,38 @@ function love.load()
     lienzo = love.graphics.newCanvas(ventana.ancho, ventana.alto)
     
     jugador.Crear(ventana.ancho / 2, ventana.alto / 2)
-    enemigo.Crear(enemigo, "assets/rojo.png") 
+    
+    -- SOLUCIÓN: Cambiamos 'enemigo' por 'enemigoRojo' para no borrar la plantilla original
+    enemigoRojo = enemigo:Nuevo(100, 100, 30, "assets/rojo.png") 
+    enemigo1 = enemigo:Nuevo(20, 120, 45, "assets/verde.png")
+    enemigo2 = enemigo:Nuevo(130, 40, 60, "assets/azul.png")
 end
 
 function love.update(dt)
-    
     jugador.Actualizar(dt)
-    enemigo.Actualizar(enemigo, dt)
+    
+    -- Actualizamos cada variable individual
+    enemigoRojo:Actualizar(dt)
+    enemigo1:Actualizar(dt)
+    enemigo2:Actualizar(dt)
 
-        
-    atrapado = comprobarColision(
-        jugador.hitbox_x,
-        jugador.hitbox_y,
-        jugador.ancho,
-        jugador.alto,
-        enemigo.hitbox_x,
-        enemigo.hitbox_y,
-        enemigo.ancho,
-        enemigo.alto
+    -- Comprobamos colisiones usando 'enemigoRojo'
+    local colision_rojo = comprobarColision(
+        jugador.hitbox_x, jugador.hitbox_y, jugador.ancho, jugador.alto,
+        enemigoRojo.hitbox_x, enemigoRojo.hitbox_y, enemigoRojo.ancho, enemigoRojo.alto
     )
+    
+    local colision_verde = comprobarColision(
+        jugador.hitbox_x, jugador.hitbox_y, jugador.ancho, jugador.alto,
+        enemigo1.hitbox_x, enemigo1.hitbox_y, enemigo1.ancho, enemigo1.alto
+    )
+    
+    local colision_azul = comprobarColision(
+        jugador.hitbox_x, jugador.hitbox_y, jugador.ancho, jugador.alto,
+        enemigo2.hitbox_x, enemigo2.hitbox_y, enemigo2.ancho, enemigo2.alto
+    )
+
+    atrapado = colision_rojo or colision_verde or colision_azul
 end
 
 function love.draw()
@@ -49,7 +62,11 @@ function love.draw()
     love.graphics.clear()
     
     jugador.Dibujar()
-    enemigo.Dibujar(enemigo)
+    
+    -- Dibujamos los tres clones individuales
+    enemigoRojo:Dibujar()
+    enemigo1:Dibujar()
+    enemigo2:Dibujar()
     
     love.graphics.setCanvas()
     love.graphics.draw(lienzo, 0, 0, 0, ventana.escala, ventana.escala)

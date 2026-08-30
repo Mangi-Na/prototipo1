@@ -1,28 +1,28 @@
-enemigo = {
-    y = 100,
-    x = 100,
-    alto = 0,
-    ancho = 0,
-    origen_x = 0,
-    origen_y = 0,
-    hitbox_x = 0,
-    hitbox_y = 0,
-    velocidad = 30,
-    sprite = nil
-}
+enemigo = {}
+enemigo.__index = enemigo -- ¡Esta línea es obligatoria para que funcione enemigo:Nuevo!
 
--- INICIALIZACION
-function enemigo.Crear(self, ruta)
-    self.sprite = love.graphics.newImage(ruta)
-    self.ancho = self.sprite:getWidth() 
-    self.alto = self.sprite:getHeight()
-    self.origen_x = self.ancho / 2  
-    self.origen_y = self.alto / 2
+-- Función para crear cada enemigo individual
+function enemigo:Nuevo(x, y, velocidad, ruta)
+    local instancia = setmetatable({}, self)
+    
+    instancia.x = x
+    instancia.y = y
+    instancia.velocidad = velocidad
+    instancia.sprite = love.graphics.newImage(ruta)
+    
+    instancia.ancho = instancia.sprite:getWidth() 
+    instancia.alto = instancia.sprite:getHeight()
+    instancia.origen_x = instancia.ancho / 2  
+    instancia.origen_y = instancia.alto / 2
+    instancia.hitbox_x = 0
+    instancia.hitbox_y = 0
+    
+    return instancia
 end
 
--- CORREGIDO: Quitamos 'x, y, a' de los parámetros porque no los usabas
-function enemigo.Actualizar(self, dt)
-    -- persecucion
+-- CORRECCIÓN CRÍTICA: Debe tener dos puntos ':' y NO debe llevar 'self' dentro del paréntesis
+function enemigo:Actualizar(dt)
+    -- Persecución
     local dist_x = math.abs(self.x - jugador.x)
     local dist_y = math.abs(self.y - jugador.y)
     
@@ -44,11 +44,12 @@ function enemigo.Actualizar(self, dt)
         end   
     end
 
-   
+    -- Hitbox propia para las colisiones
     self.hitbox_x = self.x - self.origen_x
     self.hitbox_y = self.y - self.origen_y
 end
 
-function enemigo.Dibujar(self)
+-- CORRECCIÓN CRÍTICA: Asegúrate de que se llame Dibujar y tenga dos puntos ':'
+function enemigo:Dibujar()
     love.graphics.draw(self.sprite, self.x, self.y, 0, 1, 1, self.origen_x, self.origen_y)
 end
