@@ -22,7 +22,7 @@ function jugador.Crear(x, y)
     jugador.y = y
 end
 
--- MANEJA EL MOVIMIENTO
+-- MOVIMIENTO
 function jugador.Actualizar(dt)
     if love.keyboard.isDown("right") then
         jugador.x = jugador.x + (jugador.velocidad * dt)

@@ -1,7 +1,7 @@
 enemigo = {}
-enemigo.__index = enemigo -- ¡Esta línea es obligatoria para que funcione enemigo:Nuevo!
+enemigo.__index = enemigo 
 
--- Función para crear cada enemigo individual
+-- Función para crear cada enemigo
 function enemigo:Nuevo(x, y, velocidad, ruta)
     local instancia = setmetatable({}, self)
     
@@ -20,7 +20,7 @@ function enemigo:Nuevo(x, y, velocidad, ruta)
     return instancia
 end
 
--- CORRECCIÓN CRÍTICA: Debe tener dos puntos ':' y NO debe llevar 'self' dentro del paréntesis
+
 function enemigo:Actualizar(dt)
     -- Persecución
     local dist_x = math.abs(self.x - jugador.x)
@@ -44,12 +44,12 @@ function enemigo:Actualizar(dt)
         end   
     end
 
-    -- Hitbox propia para las colisiones
+    -- Hitbox para las colisiones
     self.hitbox_x = self.x - self.origen_x
     self.hitbox_y = self.y - self.origen_y
 end
 
--- CORRECCIÓN CRÍTICA: Asegúrate de que se llame Dibujar y tenga dos puntos ':'
+
 function enemigo:Dibujar()
     love.graphics.draw(self.sprite, self.x, self.y, 0, 1, 1, self.origen_x, self.origen_y)
 end
