@@ -11,6 +11,8 @@ jugador = {
     ancho,
     origen_x,
     origen_y,
+    hitbox_x = 0,
+    hitbox_y = 0,
     velocidad = 50,
     sprite = nil
 
@@ -19,10 +21,23 @@ jugador = {
 enemigo = {
     y = 100,
     x = 100,
+    alto,
+    ancho,
+    origen_x,
+    origen_y,
+    hitbox_x = 0,
+    hitbox_y = 0,
     velocidad = 72,
     sprite = nil
 
 }
+
+function comprobarColision(x1, y1, ancho1, alto1, x2, y2, ancho2, alto2)
+    return x1 < x2 + ancho2 and 
+           x2 < x1 + ancho1 and  
+           y1 < y2 + alto2  and
+           y2 < y1 + alto1
+end
 
 function love.load()
     love.window.setMode(ventana.ancho * ventana.escala, ventana.alto * ventana.escala)
@@ -31,11 +46,17 @@ function love.load()
     jugador.sprite = love.graphics.newImage("assets/payaso.png")
     enemigo.sprite = love.graphics.newImage("assets/rojo.png")
 
+    --alto y ancho
     jugador.ancho = jugador.sprite:getWidth()
     jugador.alto = jugador.sprite:getHeight()
+    enemigo.ancho = jugador.sprite:getWidth()
+    enemigo.alto = jugador.sprite:getHeight()
 
+    --calcular centro
     jugador.origen_x = jugador.ancho / 2
     jugador.origen_y = jugador.alto / 2
+    enemigo.origen_x = jugador.ancho / 2
+    enemigo.origen_y = jugador.alto / 2
 
     jugador.x = ventana.ancho /2
     jugador.y = ventana.alto /2
@@ -58,7 +79,7 @@ function love.update(dt)
     local dist_y = math.abs(enemigo.y - jugador.y)
     
     if dist_x > dist_y then
-       if dist_x > 20 then
+       if dist_x > jugador.ancho then
           if enemigo.x < jugador.x then
               enemigo.x = enemigo.x + (enemigo.velocidad * dt)
               elseif enemigo.x > jugador.x then
@@ -66,7 +87,7 @@ function love.update(dt)
           end
       end
         
-      if dist_y > 25 then
+      if dist_y > jugador.alto then
            if enemigo.y < jugador.y then
              enemigo.y = enemigo.y + (enemigo.velocidad * dt)
              elseif enemigo.y > jugador.y then
@@ -74,6 +95,12 @@ function love.update(dt)
           end
         end   
     end
+
+    -- Calcular hitboxes
+    jugador.hitbox_x = jugador.x - jugador.origen_x
+    jugador.hitbox_y = jugador.y - jugador.origen_y
+    enemigo.hitbox_x = enemigo.x - enemigo.origen_x
+    enemigo.hitbox_y = enemigo.y - enemigo.origen_y
     
 end
 
@@ -83,7 +110,7 @@ function love.draw()
     love.graphics.setCanvas(lienzo)
     love.graphics.clear()
     love.graphics.draw(jugador.sprite,jugador.x, jugador.y, 0,1,1,jugador.origen_x, jugador.origen_y)
-    love.graphics.draw(enemigo.sprite, enemigo.x, enemigo.y, 0)
+    love.graphics.draw(enemigo.sprite, enemigo.x, enemigo.y, 0,1,1,enemigo.origen_x, enemigo.origen_y)
     love.graphics.setCanvas()
 
     love.graphics.draw(lienzo,0,0,0,ventana.escala,ventana.escala)
