@@ -11,6 +11,10 @@ ventana = {
 atrapado = false
 victoria = false
 tiempo_supervivencia = 15.0 
+musica = nil
+sonido_derrota = nil
+sonido_victoria = nil
+audio_final_reproducido = false
 
 function comprobarColision(x1, y1, ancho1, alto1, x2, y2, ancho2, alto2)
     return x1 < x2 + ancho2 and 
@@ -23,6 +27,11 @@ function reiniciarJuego()
     atrapado = false
     victoria = false
     tiempo_supervivencia = 15.0
+    audio_final_reproducido = false
+
+    love.audio.stop(sonido_derrota)
+    love.audio.stop(sonido_victoria)
+    musica:play()
     
     jugador.Crear(ventana.ancho / 2, ventana.alto / 2)
     enemigoRojo = enemigo:Nuevo(100, 100, 30, "assets/rojo.png") 
@@ -34,6 +43,12 @@ function love.load()
     love.window.setMode(ventana.ancho * ventana.escala, ventana.alto * ventana.escala)
     love.graphics.setDefaultFilter("nearest", "nearest")
     lienzo = love.graphics.newCanvas(ventana.ancho, ventana.alto)
+    musica = love.audio.newSource("assets/musica fondo.mp3","stream")
+    musica:setLooping(true)
+    love.audio.play(musica)
+
+    sonido_derrota = love.audio.newSource("assets/derrota.mp3", "static")
+    sonido_victoria = love.audio.newSource("assets/victoria.mp3", "static")
     
     reiniciarJuego()
 end
@@ -41,6 +56,19 @@ end
 function love.update(dt)
     --la tecla R para reiniciar
     if atrapado or victoria then
+     
+        if not audio_final_reproducido then
+            musica:stop() -- Apaga la música de fondo
+            
+            if atrapado then
+                sonido_derrota:play()
+            elseif victoria then
+                sonido_victoria:play()
+            end
+            
+            audio_final_reproducido = true 
+        end
+
         if love.keyboard.isDown("r") then
             reiniciarJuego()
         end
@@ -92,7 +120,7 @@ function love.draw()
     
     love.graphics.draw(lienzo, 0, 0, 0, ventana.escala, ventana.escala)
 
-    --Interfaz de Usuario y Retroalimentación Visual
+    --Interfaz de Usuario 
     love.graphics.print("Tiempo: " .. string.format("%.1f", tiempo_supervivencia), 20, 20)
 
     if atrapado then
