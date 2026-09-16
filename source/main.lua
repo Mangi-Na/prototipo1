@@ -1,7 +1,4 @@
-Class = require "class"
-require "jugador"
-require "enemigo"
-require "enemigos_variantes"
+require "dependencias"
 
 ventana = {
     ancho = 160,
@@ -47,8 +44,9 @@ function reiniciarJuego()
     lista_enemigos = {
         Enemigo(100, 100, 30, "assets/rojo.png"), -- Enemigo base
         EnemigoErratico(20, 120),             -- Variante errática (verde)
-        EnemigoRapido(130, 40)             -- Variante rápida (azul)
-    }
+        EnemigoRapido(130, 40)            -- Variante rápida (azul)
+        }
+
 end
 
 function love.load()

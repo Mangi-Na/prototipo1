@@ -1,5 +1,3 @@
-Class = require "class"
-
 Jugador = Class{}
 
 function Jugador:init(x, y, v)

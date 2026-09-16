@@ -1,5 +1,3 @@
-Class = require "class"
-require "enemigo"
 
 -- ENEMIGO RÁPIDO (Hereda de Enemigo)
 EnemigoRapido = Class{__includes = Enemigo}

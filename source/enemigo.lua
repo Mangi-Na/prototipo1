@@ -1,5 +1,3 @@
-Class = require "class"
-
 Enemigo = Class{}
 
 function Enemigo:init(x, y, velocidad, ruta)
