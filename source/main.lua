@@ -1,5 +1,7 @@
+Class = require "class"
 require "jugador"
 require "enemigo"
+require "enemigos_variantes"
 
 ventana = {
     ancho = 160,
@@ -16,6 +18,10 @@ sonido_derrota = nil
 sonido_victoria = nil
 sonido_golpe = nil
 audio_final_reproducido = false
+
+-- Entidades del juego
+jugador_obj = nil
+lista_enemigos = {}
 
 function comprobarColision(x1, y1, ancho1, alto1, x2, y2, ancho2, alto2)
     return x1 < x2 + ancho2 and 
@@ -34,28 +40,35 @@ function reiniciarJuego()
     love.audio.stop(sonido_victoria)
     musica:play()
     
-    jugador.Crear(ventana.ancho / 2, ventana.alto / 2)
-    enemigoRojo = enemigo:Nuevo(100, 100, 30, "assets/rojo.png") 
-    enemigo1 = enemigo:Nuevo(20, 120, 45, "assets/verde.png")
-    enemigo2 = enemigo:Nuevo(130, 40, 60, "assets/azul.png")
+    -- Instanciación de Objetos con class
+    jugador_obj = Jugador(ventana.ancho / 2, ventana.alto / 2)
+    
+    -- Creación de la lista de enemigos utilizando polimorfismo
+    lista_enemigos = {
+        Enemigo(100, 100, 30, "assets/rojo.png"), -- Enemigo base
+        EnemigoErratico(20, 120),             -- Variante errática (verde)
+        EnemigoRapido(130, 40)             -- Variante rápida (azul)
+    }
 end
 
 function love.load()
     love.window.setMode(ventana.ancho * ventana.escala, ventana.alto * ventana.escala)
     love.graphics.setDefaultFilter("nearest", "nearest")
     lienzo = love.graphics.newCanvas(ventana.ancho, ventana.alto)
-    musica = love.audio.newSource("assets/musica fondo.mp3","stream")
+    
+    musica = love.audio.newSource("assets/musica fondo.mp3", "stream")
     musica:setLooping(true)
     love.audio.play(musica)
 
     sonido_derrota = love.audio.newSource("assets/derrota.mp3", "static")
     sonido_victoria = love.audio.newSource("assets/victoria.mp3", "static")
     sonido_golpe = love.audio.newSource("assets/golpe.mp3", "static")
+    
     reiniciarJuego()
 end
 
 function love.update(dt)
-    -- Tecla R para reiniciar
+    -- Pantallas de fin de juego
     if atrapado or victoria then
         if not audio_final_reproducido then
             musica:stop()
@@ -75,28 +88,26 @@ function love.update(dt)
         return 
     end
 
-    -- Actualizaciones
-    jugador.Actualizar(dt)
-    if enemigoRojo.activo then enemigoRojo:Actualizar(dt) end
-    if enemigo1.activo then enemigo1:Actualizar(dt) end
-    if enemigo2.activo then enemigo2:Actualizar(dt) end
+    -- Actualizaciones de Entidades
+    jugador_obj:Actualizar(dt)
+    
+    for _, e in ipairs(lista_enemigos) do
+        e:Actualizar(dt, jugador_obj)
+    end
 
     -- Chequeo de ataque del jugador a los enemigos
-    if jugador.atacando then
-        local lista_enemigos = { enemigoRojo, enemigo1, enemigo2 }
+    if jugador_obj.atacando then
         for _, e in ipairs(lista_enemigos) do
             if e.activo then
                 local golpear = comprobarColision(
-                    jugador.hitbox_ataque.x, jugador.hitbox_ataque.y, 
-                    jugador.hitbox_ataque.ancho, jugador.hitbox_ataque.alto,
+                    jugador_obj.hitbox_ataque.x, jugador_obj.hitbox_ataque.y, 
+                    jugador_obj.hitbox_ataque.ancho, jugador_obj.hitbox_ataque.alto,
                     e.hitbox_x, e.hitbox_y, e.ancho, e.alto
                 )
                 if golpear then
                     sonido_golpe:stop()
                     sonido_golpe:play()
-                    e.x = math.random(10, ventana.ancho - 10)
-                    e.y = math.random(10, ventana.alto - 10)
-                    
+                    e:RecibirGolpe(ventana.ancho, ventana.alto)
                 end
             end
         end
@@ -110,21 +121,17 @@ function love.update(dt)
     end
 
     -- Colisiones con el jugador (Condición de Derrota)
-  local colision_rojo = enemigoRojo.activo and comprobarColision(
-        jugador.hitbox_x, jugador.hitbox_y, jugador.ancho, jugador.alto,
-        enemigoRojo.hitbox_x, enemigoRojo.hitbox_y, enemigoRojo.ancho_hitbox, enemigoRojo.alto_hitbox
-    )
-    local colision_verde = enemigo1.activo and comprobarColision(
-        jugador.hitbox_x, jugador.hitbox_y, jugador.ancho, jugador.alto,
-        enemigo1.hitbox_x, enemigo1.hitbox_y, enemigo1.ancho_hitbox, enemigo1.alto_hitbox
-    )
-    local colision_azul = enemigo2.activo and comprobarColision(
-        jugador.hitbox_x, jugador.hitbox_y, jugador.ancho, jugador.alto,
-        enemigo2.hitbox_x, enemigo2.hitbox_y, enemigo2.ancho_hitbox, enemigo2.alto_hitbox
-    )
-
-    if colision_rojo or colision_verde or colision_azul then
-        atrapado = true
+    for _, e in ipairs(lista_enemigos) do
+        if e.activo then
+            local colision = comprobarColision(
+                jugador_obj.hitbox_x, jugador_obj.hitbox_y, jugador_obj.ancho, jugador_obj.alto,
+                e.hitbox_x, e.hitbox_y, e.ancho_hitbox, e.alto_hitbox
+            )
+            if colision then
+                atrapado = true
+                break
+            end
+        end
     end
 end
 
@@ -132,13 +139,13 @@ function love.draw()
     love.graphics.setCanvas(lienzo)
     love.graphics.clear()
     
-    jugador.Dibujar()
-    enemigoRojo:Dibujar()
-    enemigo1:Dibujar()
-    enemigo2:Dibujar()
+    -- Dibujar Entidades
+    jugador_obj:Dibujar()
+    for _, e in ipairs(lista_enemigos) do
+        e:Dibujar()
+    end
     
     love.graphics.setCanvas()
-    
     love.graphics.draw(lienzo, 0, 0, 0, ventana.escala, ventana.escala)
 
     -- Interfaz de Usuario 
