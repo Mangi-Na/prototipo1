@@ -15,6 +15,8 @@ sonido_derrota = nil
 sonido_victoria = nil
 sonido_golpe = nil
 audio_final_reproducido = false
+maquina_estados = nil
+
 
 -- Entidades del juego
 jugador_obj = nil
@@ -61,109 +63,17 @@ function love.load()
     sonido_derrota = love.audio.newSource("assets/derrota.mp3", "static")
     sonido_victoria = love.audio.newSource("assets/victoria.mp3", "static")
     sonido_golpe = love.audio.newSource("assets/golpe.mp3", "static")
-    
+    --maquina_estados = Estado_juego()
+    maquina_estados = estado_titulo()
     reiniciarJuego()
 end
 
 function love.update(dt)
-    -- Pantallas de fin de juego
-    if atrapado or victoria then
-        if not audio_final_reproducido then
-            musica:stop()
-            
-            if atrapado then
-                sonido_derrota:play()
-            elseif victoria then
-                sonido_victoria:play()
-            end
-            
-            audio_final_reproducido = true 
-        end
-
-        if love.keyboard.isDown("r") then
-            reiniciarJuego()
-        end
-        return 
-    end
-
-    -- Actualizaciones de Entidades
-    jugador_obj:Actualizar(dt)
-    
-    for _, e in ipairs(lista_enemigos) do
-        e:Actualizar(dt, jugador_obj)
-    end
-
-    -- Chequeo de ataque del jugador a los enemigos
-    if jugador_obj.atacando then
-        for _, e in ipairs(lista_enemigos) do
-            if e.activo then
-                local golpear = comprobarColision(
-                    jugador_obj.hitbox_ataque.x, jugador_obj.hitbox_ataque.y, 
-                    jugador_obj.hitbox_ataque.ancho, jugador_obj.hitbox_ataque.alto,
-                    e.hitbox_x, e.hitbox_y, e.ancho, e.alto
-                )
-                if golpear then
-                    sonido_golpe:stop()
-                    sonido_golpe:play()
-                    e:RecibirGolpe(ventana.ancho, ventana.alto)
-                end
-            end
-        end
-    end
-
-    -- Temporizador (Condición de Victoria)
-    tiempo_supervivencia = tiempo_supervivencia - dt
-    if tiempo_supervivencia <= 0 then
-        tiempo_supervivencia = 0
-        victoria = true
-    end
-
-    -- Colisiones con el jugador (Condición de Derrota)
-    for _, e in ipairs(lista_enemigos) do
-        if e.activo then
-            local colision = comprobarColision(
-                jugador_obj.hitbox_x, jugador_obj.hitbox_y, jugador_obj.ancho, jugador_obj.alto,
-                e.hitbox_x, e.hitbox_y, e.ancho_hitbox, e.alto_hitbox
-            )
-            if colision then
-                atrapado = true
-                break
-            end
-        end
-    end
+    maquina_estados:actualizar(dt)
+   
 end
 
 function love.draw()
-    love.graphics.setCanvas(lienzo)
-    love.graphics.clear()
-    
-    -- Dibujar Entidades
-    jugador_obj:Dibujar()
-    for _, e in ipairs(lista_enemigos) do
-        e:Dibujar()
-    end
-    
-    love.graphics.setCanvas()
-    love.graphics.draw(lienzo, 0, 0, 0, ventana.escala, ventana.escala)
+    maquina_estados:dibujar()
 
-    -- Interfaz de Usuario 
-    love.graphics.print("Tiempo: " .. string.format("%.1f", tiempo_supervivencia), 20, 20)
-
-    if atrapado then
-        -- Derrota
-        love.graphics.setColor(1, 0, 0, 0.3)
-        love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-        love.graphics.setColor(1, 1, 1, 1)
-        
-        love.graphics.print("¡GAME OVER!", 290, 250)
-        love.graphics.print("Presiona 'R' para reiniciar", 250, 290)      
-    elseif victoria then
-        -- Victoria
-        love.graphics.setColor(0, 1, 0, 0.3)
-        love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-        love.graphics.setColor(1, 1, 1, 1)
-        
-        love.graphics.print("¡VICTORIA!", 290, 250)
-        love.graphics.print("Presiona 'R' para jugar de nuevo", 230, 290)
-    end
 end
