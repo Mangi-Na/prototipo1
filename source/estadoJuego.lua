@@ -1,12 +1,12 @@
-Estado_juego = Class{__includes = maquina_estados}
+estadoJuego = Class{__includes = maquinaEstado}
 
-function Estado_juego:init()
+function estadoJuego:init()
     -- Llamamos a la función para inicializar todo al crear el estado
     self:reiniciarJuego()
 end
 
 -- Sacamos reiniciarJuego de init y la convertimos en un método de la clase
-function Estado_juego:reiniciarJuego()
+function estadoJuego:reiniciarJuego()
     atrapado = false
     victoria = false
     tiempo_supervivencia = 15.0
@@ -27,11 +27,11 @@ function Estado_juego:reiniciarJuego()
     }
 end
 
-function Estado_juego:ingresar() end
+function estadoJuego:ingresar() end
 
-function Estado_juego:salir() end
+function estadoJuego:salir() end
 
-function Estado_juego:actualizar(dt)
+function estadoJuego:actualizar(dt)
     -- Pantallas de fin de juego
     if atrapado or victoria then
         if not audio_final_reproducido then
@@ -47,10 +47,19 @@ function Estado_juego:actualizar(dt)
         end
 
         if love.keyboard.isDown("r") then
-            self:reiniciarJuego() -- Ahora usamos self:reiniciarJuego()
+            self:reiniciarJuego() 
+        elseif love.keyboard.isDown("escape") then
+            -- AQUÍ VUELVES AL TÍTULO SI EL JUGADOR PRESIONA ESC
+            maquinaEstadoGlobal:cambiar('titulo')
         end
         return 
     end
+
+    -- Si el jugador presiona ESC durante la partida para salir al menú
+    if love.keyboard.isDown("escape") then
+        maquinaEstadoGlobal:cambiar('titulo')
+    end
+
 
     -- Actualizaciones de Entidades
     jugador_obj:Actualizar(dt)
@@ -99,7 +108,7 @@ function Estado_juego:actualizar(dt)
     end
 end
 
-function Estado_juego:dibujar()
+function estadoJuego:dibujar()
     love.graphics.setCanvas(lienzo)
     love.graphics.clear()
     

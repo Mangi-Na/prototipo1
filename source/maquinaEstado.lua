@@ -1,6 +1,6 @@
-maquina_estado = Class{}
+maquinaEstado = Class{}
 
-function maquina_estado:init(estados)
+function maquinaEstado:init(estados)
     self.base = { dibujar = function () end,
                   actualizar = function () end,
                   ingresar = function () end,
@@ -11,17 +11,17 @@ function maquina_estado:init(estados)
     self.actual = self.base
 
 end
-function maquina_estado:cambiar(nombreEstado. parametrosIniciles)
+function maquinaEstado:cambiar(nombreEstado, parametrosIniciles)
     assert(self.estados[nombreEstado])
     self.actual:salir()
     self.actual = self.estados [nombreEstado]()
      self.actual:ingresar(parametrosIniciles)
 end
 
-function maquina_estado:actualizar(dt)
+function maquinaEstado:actualizar(dt)
     self.actual:actualizar(dt)
 end
-function maquina_estado:dibujar()
+function maquinaEstado:dibujar()
     self.actual:dibujar()
 end
 
