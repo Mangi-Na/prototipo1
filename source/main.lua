@@ -37,7 +37,8 @@ function love.load()
     -- Inicialización de la Máquina de Estados
     maquinaEstadoGlobal = maquinaEstado({
         ['titulo'] = function() return estadoTitulo() end,
-        ['jugar']  = function() return estadoJuego() end
+        ['jugar']  = function() return estadoJuego() end,
+        ['Fin']  = function() return estadoFin() end
     })
     
     -- Iniciar en la pantalla de título

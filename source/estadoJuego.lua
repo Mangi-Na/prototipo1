@@ -42,20 +42,20 @@ function estadoJuego:actualizar(dt)
             elseif victoria then
                 sonido_victoria:play()
             end
-            
+            maquinaEstadoGlobal:cambiar('Fin', { victoria = victoria })
             audio_final_reproducido = true 
         end
 
         if love.keyboard.isDown("r") then
             self:reiniciarJuego() 
         elseif love.keyboard.isDown("escape") then
-            -- AQUÍ VUELVES AL TÍTULO SI EL JUGADOR PRESIONA ESC
+            --SI EL JUGADOR PRESIONA ESC
             maquinaEstadoGlobal:cambiar('titulo')
         end
         return 
     end
 
-    -- Si el jugador presiona ESC durante la partida para salir al menú
+    
     if love.keyboard.isDown("escape") then
         maquinaEstadoGlobal:cambiar('titulo')
     end
