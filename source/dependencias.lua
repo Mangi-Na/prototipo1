@@ -1,4 +1,6 @@
 Class = require "lib.class"
+STI = require "lib.sti"
+Camara = require "lib.camera"
 require "jugador"
 require "enemigo"
 require "enemigos_variantes"

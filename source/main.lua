@@ -13,6 +13,8 @@ sonido_victoria = nil
 sonido_golpe = nil
 lienzo = nil
 funte = nil
+mapa = nil
+camaraPrincipal = nil
 
 -- Función global auxiliar de colisiones
 function comprobarColision(x1, y1, ancho1, alto1, x2, y2, ancho2, alto2)
@@ -29,6 +31,10 @@ function love.load()
     
     fuenteTitulo = love.graphics.newFont("fuentes/CordelCircoMambembe-Bold.ttf", 40)
     fuenteSubtitulo = love.graphics.newFont("fuentes/CordelCircoMambembe-Bold.ttf", 26)
+
+    mapa = STI ("mapa/mapa.lua")
+    camaraPrincipal = Camara()
+
     -- Cargar Audio
     musica = love.audio.newSource("assets/musica fondo.mp3", "stream")
     musica:setLooping(true)
@@ -54,4 +60,5 @@ end
 
 function love.draw()
     maquinaEstadoGlobal:dibujar()
+    
 end

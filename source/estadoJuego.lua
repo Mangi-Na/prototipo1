@@ -63,6 +63,7 @@ function estadoJuego:actualizar(dt)
 
     -- Actualizaciones de Entidades
     jugador_obj:Actualizar(dt)
+   camaraPrincipal:lookAt(math.floor(jugador_obj.x), math.floor(jugador_obj.y))
     
     for _, e in ipairs(lista_enemigos) do
         e:Actualizar(dt, jugador_obj)
@@ -111,34 +112,23 @@ end
 function estadoJuego:dibujar()
     love.graphics.setCanvas(lienzo)
     love.graphics.clear()
+    camaraPrincipal:attach(0,0,ventana.ancho, ventana.alto)
+
+    mapa:drawLayer(mapa.layers["piso"])
+    
     
     -- Dibujar Entidades
     jugador_obj:Dibujar()
     for _, e in ipairs(lista_enemigos) do
         e:Dibujar()
     end
-    
+    camaraPrincipal:detach()
+
     love.graphics.setCanvas()
     love.graphics.draw(lienzo, 0, 0, 0, ventana.escala, ventana.escala)
 
     -- Interfaz de Usuario 
     love.graphics.print("Tiempo: " .. string.format("%.1f", tiempo_supervivencia), 20, 20)
 
-    if atrapado then
-        -- Derrota
-        love.graphics.setColor(1, 0, 0, 0.3)
-        love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-        love.graphics.setColor(1, 1, 1, 1)
-        
-        love.graphics.print("¡GAME OVER!", 290, 250)
-        love.graphics.print("Presiona 'R' para reiniciar", 250, 290)      
-    elseif victoria then
-        -- Victoria
-        love.graphics.setColor(0, 1, 0, 0.3)
-        love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-        love.graphics.setColor(1, 1, 1, 1)
-        
-        love.graphics.print("¡VICTORIA!", 290, 250)
-        love.graphics.print("Presiona 'R' para jugar de nuevo", 230, 290)
-    end
+   
 end
