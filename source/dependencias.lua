@@ -1,4 +1,4 @@
-Class = require "class"
+Class = require "lib.class"
 require "jugador"
 require "enemigo"
 require "enemigos_variantes"

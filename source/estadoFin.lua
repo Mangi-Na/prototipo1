@@ -13,6 +13,10 @@ function estadoFin:actualizar(dt)
     end
 end
 function estadoFin:dibujar()
-    love.graphics.printf('GAME OVER',0,64,ventana.ancho * ventana.escala, 'center')
-    love.graphics.printf('Presiona Enter para Continuar',0,100,ventana.ancho * ventana.escala, 'center')
+    love.graphics.setColor(1,0,0)
+    love.graphics.setFont(fuenteTitulo)
+    love.graphics.printf('GAME OVER',0,100,ventana.ancho * ventana.escala, 'center')
+    love.graphics.setFont(fuenteSubtitulo)
+    love.graphics.printf('Presiona Enter para Continuar',0,164,ventana.ancho * ventana.escala, 'center')
+    love.graphics.setColor(1, 1, 1, 1)
 end

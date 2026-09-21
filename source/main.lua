@@ -12,6 +12,7 @@ sonido_derrota = nil
 sonido_victoria = nil
 sonido_golpe = nil
 lienzo = nil
+funte = nil
 
 -- Función global auxiliar de colisiones
 function comprobarColision(x1, y1, ancho1, alto1, x2, y2, ancho2, alto2)
@@ -26,6 +27,8 @@ function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
     lienzo = love.graphics.newCanvas(ventana.ancho, ventana.alto)
     
+    fuenteTitulo = love.graphics.newFont("fuentes/CordelCircoMambembe-Bold.ttf", 40)
+    fuenteSubtitulo = love.graphics.newFont("fuentes/CordelCircoMambembe-Bold.ttf", 26)
     -- Cargar Audio
     musica = love.audio.newSource("assets/musica fondo.mp3", "stream")
     musica:setLooping(true)
