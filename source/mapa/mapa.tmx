@@ -1,10 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="1">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="1">
  <editorsettings>
   <export target="mapa.lua" format="lua"/>
  </editorsettings>
  <tileset firstgid="1" name="Tileset" tilewidth="32" tileheight="32" tilecount="96" columns="12">
   <image source="Tileset.png" width="384" height="256"/>
+ </tileset>
+ <tileset firstgid="97" name="Box" tilewidth="16" tileheight="16" tilecount="2" columns="2">
+  <image source="Other/Box.png" width="32" height="25"/>
+ </tileset>
+ <tileset firstgid="99" name="4" tilewidth="16" tileheight="16" tilecount="2" columns="2">
+  <image source="Stones/4.png" width="39" height="17"/>
+ </tileset>
+ <tileset firstgid="101" name="3" tilewidth="16" tileheight="16" tilecount="1" columns="1">
+  <image source="Stones/3.png" width="27" height="16"/>
+ </tileset>
+ <tileset firstgid="102" name="6" tilewidth="16" tileheight="16" tilecount="8" columns="4">
+  <image source="Stones/6.png" width="70" height="44"/>
+ </tileset>
+ <tileset firstgid="110" name="18" tilewidth="16" tileheight="16" tilecount="2" columns="2">
+  <image source="Bushes/18.png" width="41" height="24"/>
+ </tileset>
+ <tileset firstgid="112" name="13" tilewidth="16" tileheight="16" tilecount="2" columns="2">
+  <image source="Bushes/13.png" width="40" height="17"/>
+ </tileset>
+ <tileset firstgid="114" name="6" tilewidth="16" tileheight="16" tilecount="12" columns="3">
+  <image source="Fence/6.png" width="48" height="64"/>
  </tileset>
  <layer id="1" name="piso" width="30" height="20">
   <data encoding="csv">
@@ -28,6 +49,30 @@
 65,65,2684354632,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,71,65,65,65,
 73,65,65,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,32,4,31,3,65,65,65,73,
 73,73,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,73,73
+</data>
+ </layer>
+ <layer id="7" name="deco" width="30" height="20">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,2147483746,97,123,124,125,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,112,113,0,0,0,0,
+0,0,2147483746,97,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,98,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,97,98,0,0,
+0,0,0,0,0,0,0,0,0,102,103,104,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,106,107,108,114,115,116,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,2147483749,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,112,113,113,2147483760,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,114,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,117,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,112,113,113,97,97,0,0,0,120,0,0,
+0,0,116,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,123,0,0,
+0,0,119,0,0,0,0,0,0,97,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,122,0,0,0,0,0,97,97,97,97,110,111,0,0,0,0,0,0,0,0,0,0,0,0,0,98,0,0,
+0,0,125,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,2147483746,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,101,0,0,0,
+0,0,0,2147483746,97,97,0,0,0,0,0,0,0,0,0,0,0,0,0,110,111,97,0,0,0,97,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
 </map>

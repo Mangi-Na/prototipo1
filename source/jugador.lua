@@ -58,7 +58,26 @@ function Jugador:Actualizar(dt)
             self.y = self.y - (self.velocidad * dt)
             self.direccion = "up"
         end
+        
     end
+------------------------------------------------------------------
+    -- LÍMITES DEL MAPA (Delimita los 4 bordes usando el centro)
+    ------------------------------------------------------------------
+    -- Izquierda / Derecha
+    if self.x - self.origen_x < 0 then
+        self.x = self.origen_x
+    elseif self.x + self.origen_x > ventana.mapa_ancho then
+        self.x = ventana.mapa_ancho - self.origen_x
+    end
+
+    -- Arriba / Abajo
+    if self.y - self.origen_y < 0 then
+        self.y = self.origen_y
+    elseif self.y + self.origen_y > ventana.mapa_alto then
+        self.y = ventana.mapa_alto - self.origen_y
+    end
+    ------------------------------------------------------------------
+    
 
     -- Iniciar Ataque
     if (love.keyboard.isDown("z") or love.keyboard.isDown("space")) and not self.atacando then

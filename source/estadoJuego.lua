@@ -27,7 +27,9 @@ function estadoJuego:reiniciarJuego()
     }
 end
 
-function estadoJuego:ingresar() end
+function estadoJuego:ingresar()
+    self:reiniciarJuego()
+end
 
 function estadoJuego:salir() end
 
@@ -63,8 +65,23 @@ function estadoJuego:actualizar(dt)
 
     -- Actualizaciones de Entidades
     jugador_obj:Actualizar(dt)
-   camaraPrincipal:lookAt(math.floor(jugador_obj.x), math.floor(jugador_obj.y))
     
+    camaraPrincipal:lookAt(redondear(jugador_obj.x), redondear(jugador_obj.y))
+    
+        -- Eje X (izquierda y derecha))
+    if camaraPrincipal.x < ventana.camara_centro_x then
+        camaraPrincipal.x = ventana.camara_centro_x
+    elseif camaraPrincipal.x > ventana.mapa_ancho - ventana.camara_centro_x then
+        camaraPrincipal.x = ventana.mapa_ancho - ventana.camara_centro_x
+    end
+
+    -- Eje Y (arriba y abajo)
+    if camaraPrincipal.y < ventana.camara_centro_y then
+        camaraPrincipal.y = ventana.camara_centro_y
+    elseif camaraPrincipal.y > ventana.mapa_alto - ventana.camara_centro_y then
+        camaraPrincipal.y = ventana.mapa_alto - ventana.camara_centro_y
+    end
+
     for _, e in ipairs(lista_enemigos) do
         e:Actualizar(dt, jugador_obj)
     end
@@ -112,10 +129,12 @@ end
 function estadoJuego:dibujar()
     love.graphics.setCanvas(lienzo)
     love.graphics.clear()
-    camaraPrincipal:attach(0,0,ventana.ancho, ventana.alto)
-
+    camaraPrincipal:attach(0, 0, ventana.ancho, ventana.alto)
+        
     mapa:drawLayer(mapa.layers["piso"])
+    mapa:drawLayer(mapa.layers["deco"])
     
+
     
     -- Dibujar Entidades
     jugador_obj:Dibujar()
@@ -123,6 +142,7 @@ function estadoJuego:dibujar()
         e:Dibujar()
     end
     camaraPrincipal:detach()
+    
 
     love.graphics.setCanvas()
     love.graphics.draw(lienzo, 0, 0, 0, ventana.escala, ventana.escala)

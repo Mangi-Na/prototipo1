@@ -3,7 +3,11 @@ require "dependencias"
 ventana = {
     ancho = 160,
     alto = 144,
-    escala = 4
+    escala = 4,
+    camara_centro_x = 0,
+    camara_centro_y = 0,
+    mapa_ancho = 0,
+    mapa_alto = 0,
 }
 
 -- Recursos globales (Audio y Lienzo)
@@ -23,6 +27,9 @@ function comprobarColision(x1, y1, ancho1, alto1, x2, y2, ancho2, alto2)
            y1 < y2 + alto2  and
            y2 < y1 + alto1
 end
+function redondear(num)
+    return math.floor(num + 0.5)
+end
 
 function love.load()
     love.window.setMode(ventana.ancho * ventana.escala, ventana.alto * ventana.escala)
@@ -34,7 +41,14 @@ function love.load()
 
     mapa = STI ("mapa/mapa.lua")
     camaraPrincipal = Camara()
+   
+    --limites de camara
+    ventana.camara_centro_x = ventana.ancho * 0.5
+    ventana.camara_centro_y = ventana.alto * 0.5 -- Usa 'alto' para el eje Y
 
+-- Acceso correcto a las propiedades de los tiles en STI
+    ventana.mapa_ancho = mapa.width * mapa.tilewidth
+    ventana.mapa_alto = mapa.height * mapa.tileheight
     -- Cargar Audio
     musica = love.audio.newSource("assets/musica fondo.mp3", "stream")
     musica:setLooping(true)
