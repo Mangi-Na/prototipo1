@@ -1,6 +1,6 @@
 Enemigo = Class{}
 
-function Enemigo:init(x, y, velocidad, ruta)
+function Enemigo:init(x, y, velocidad, ruta, mundo)
     self.x = x
     self.y = y
     self.velocidad = velocidad
@@ -13,11 +13,19 @@ function Enemigo:init(x, y, velocidad, ruta)
     self.origen_y = self.alto / 2
     self.ancho_hitbox = self.ancho - 8
     self.alto_hitbox = self.alto - 8
+
+    self.hitbox_x = (self.x - self.origen_x) + 4
+    self.hitbox_y = (self.y - self.origen_y) + 4
+    
+    self.mundo = mundo
+    if self.mundo then
+        self.mundo:add(self, self.hitbox_x, self.hitbox_y, self.ancho_hitbox, self.alto_hitbox)
+    end
 end
 
 function Enemigo:Actualizar(dt, obj_jugador)
-    if not self.activo then return end
-
+    if not self.activo or not obj_jugador then return end
+    
     local dx = obj_jugador.x - self.x
     local dy = obj_jugador.y - self.y
     local distancia = math.sqrt(dx * dx + dy * dy)
@@ -37,6 +45,10 @@ function Enemigo:Actualizar(dt, obj_jugador)
 
     self.hitbox_x = (self.x - self.origen_x) + 4
     self.hitbox_y = (self.y - self.origen_y) + 4
+    
+    if self.mundo then
+        self.mundo:update(self, self.hitbox_x, self.hitbox_y, self.ancho_hitbox, self.alto_hitbox)
+    end
 end
 
 function Enemigo:Dibujar()
@@ -47,4 +59,11 @@ end
 function Enemigo:RecibirGolpe(ancho_ventana, alto_ventana)
     self.x = math.random(10, ancho_ventana - 10)
     self.y = math.random(10, alto_ventana - 10)
+    
+    self.hitbox_x = (self.x - self.origen_x) + 4
+    self.hitbox_y = (self.y - self.origen_y) + 4
+
+    if self.mundo then
+        self.mundo:update(self, self.hitbox_x, self.hitbox_y, self.ancho_hitbox, self.alto_hitbox)
+    end
 end

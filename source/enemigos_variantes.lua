@@ -2,16 +2,16 @@
 -- ENEMIGO RÁPIDO (Hereda de Enemigo)
 EnemigoRapido = Class{__includes = Enemigo}
 
-function EnemigoRapido:init(x, y)
+function EnemigoRapido:init(x, y, mundo)
     -- Llama al init 
-    Enemigo.init(self, x, y, 60, "assets/azul.png")
+    Enemigo.init(self, x, y, 60, "assets/azul.png", mundo)
 end
 
 -- ENEMIGO ERRÁTICO (Hereda de Enemigo)
 EnemigoErratico = Class{__includes = Enemigo}
 
-function EnemigoErratico:init(x, y)
-    Enemigo.init(self, x, y, 45, "assets/verde.png")
+function EnemigoErratico:init(x, y, mundo)
+    Enemigo.init(self, x, y, 45, "assets/verde.png", mundo)
     self.tiempo_cambio_rumbo = 0
     self.dir_x = 0
     self.dir_y = 0
@@ -19,7 +19,7 @@ end
 
 -- Sobrescribimos su Actualizar
 function EnemigoErratico:Actualizar(dt, obj_jugador)
-    if not self.activo then return end
+    if not self.activo or not obj_jugador then return end
     
     self.tiempo_cambio_rumbo = self.tiempo_cambio_rumbo - dt
     if self.tiempo_cambio_rumbo <= 0 then
@@ -49,6 +49,5 @@ function EnemigoErratico:Actualizar(dt, obj_jugador)
         self.dir_y = -1 -- Rebota hacia arriba
     end
     
-    self.hitbox_x = (self.x - self.origen_x) + 4
-    self.hitbox_y = (self.y - self.origen_y) + 4
+    Enemigo.Actualizar(self,x,y,dt, obj_jugador)
 end

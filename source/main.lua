@@ -19,6 +19,7 @@ lienzo = nil
 funte = nil
 mapa = nil
 camaraPrincipal = nil
+mundo = nil
 
 -- Función global auxiliar de colisiones
 function comprobarColision(x1, y1, ancho1, alto1, x2, y2, ancho2, alto2)
@@ -35,10 +36,15 @@ function love.load()
     love.window.setMode(ventana.ancho * ventana.escala, ventana.alto * ventana.escala)
     love.graphics.setDefaultFilter("nearest", "nearest")
     lienzo = love.graphics.newCanvas(ventana.ancho, ventana.alto)
+
+    mundo = Bump.newWorld(16)
+
     
     fuenteTitulo = love.graphics.newFont("fuentes/CordelCircoMambembe-Bold.ttf", 40)
     fuenteSubtitulo = love.graphics.newFont("fuentes/CordelCircoMambembe-Bold.ttf", 26)
 
+    mapa = STI("mapa/mapa.lua", { "bump" })
+    mapa:bump_init(mundo)
     mapa = STI ("mapa/mapa.lua")
     camaraPrincipal = Camara()
    
@@ -46,7 +52,7 @@ function love.load()
     ventana.camara_centro_x = ventana.ancho * 0.5
     ventana.camara_centro_y = ventana.alto * 0.5 -- Usa 'alto' para el eje Y
 
--- Acceso correcto a las propiedades de los tiles en STI
+    -- Acceso correcto a las propiedades de los tiles en STI
     ventana.mapa_ancho = mapa.width * mapa.tilewidth
     ventana.mapa_alto = mapa.height * mapa.tileheight
     -- Cargar Audio

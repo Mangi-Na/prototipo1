@@ -1,6 +1,6 @@
 Jugador = Class{}
 
-function Jugador:init(x, y, v)
+function Jugador:init(x, y, mundo)
     self.x = x
     self.y = y
     self.velocidad = 72
@@ -10,6 +10,13 @@ function Jugador:init(x, y, v)
     self.origen_x = self.ancho / 2 
     self.origen_y = self.alto / 2    
     self.direccion = "down"
+    -- Hitbox e integración con Bump
+    self.hitbox_x = self.x - self.origen_x
+    self.hitbox_y = self.y - self.origen_y
+   
+    self.mundo = mundo
+    self.mundo:add(self, self.hitbox_x, self.hitbox_y, self.ancho, self.alto)
+
 
     -- ATAQUE Y ANIMACIÓN
     self.atacando = false
@@ -60,9 +67,8 @@ function Jugador:Actualizar(dt)
         end
         
     end
-------------------------------------------------------------------
-    -- LÍMITES DEL MAPA (Delimita los 4 bordes usando el centro)
-    ------------------------------------------------------------------
+    
+    -- LÍMITES DEL MAPA 
     -- Izquierda / Derecha
     if self.x - self.origen_x < 0 then
         self.x = self.origen_x
@@ -76,8 +82,7 @@ function Jugador:Actualizar(dt)
     elseif self.y + self.origen_y > ventana.mapa_alto then
         self.y = ventana.mapa_alto - self.origen_y
     end
-    ------------------------------------------------------------------
-    
+        
 
     -- Iniciar Ataque
     if (love.keyboard.isDown("z") or love.keyboard.isDown("space")) and not self.atacando then
@@ -115,6 +120,10 @@ function Jugador:Actualizar(dt)
         self.hitbox_ataque.x, self.hitbox_ataque.y = self.x - 8, self.y + offset
         self.guante_rotacion, self.guante_scale_x, self.guante_scale_y = math.pi / 2, 1, 1
     end
+    
+    self.hitbox_x = self.x - self.origen_x
+    self.hitbox_y = self.y - self.origen_y
+    self.mundo:update(self, self.hitbox_x, self.hitbox_y, self.ancho, self.alto)
 end
 
 function Jugador:Dibujar()

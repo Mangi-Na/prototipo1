@@ -17,13 +17,13 @@ function estadoJuego:reiniciarJuego()
     musica:play()
     
     -- Instanciación de Objetos con class
-    jugador_obj = Jugador(ventana.ancho / 2, ventana.alto / 2)
+    jugador_obj = Jugador(ventana.ancho / 2, ventana.alto / 2, mundo)
     
     -- Creación de la lista de enemigos utilizando polimorfismo
     lista_enemigos = {
-        Enemigo(100, 100, 30, "assets/rojo.png"), -- Enemigo base
-        EnemigoErratico(20, 120),             -- Variante errática (verde)
-        EnemigoRapido(130, 40)            -- Variante rápida (azul)
+        Enemigo(100, 100, 30, "assets/rojo.png", mundo), -- Enemigo base
+        EnemigoErratico(20, 120, mundo),             -- Variante errática (verde)
+        EnemigoRapido(130, 40, mundo)            -- Variante rápida (azul)
     }
 end
 
@@ -132,15 +132,15 @@ function estadoJuego:dibujar()
     camaraPrincipal:attach(0, 0, ventana.ancho, ventana.alto)
         
     mapa:drawLayer(mapa.layers["piso"])
-    mapa:drawLayer(mapa.layers["deco"])
-    
-
-    
-    -- Dibujar Entidades
+   
+     -- Dibujar Entidades
     jugador_obj:Dibujar()
     for _, e in ipairs(lista_enemigos) do
         e:Dibujar()
     end
+
+    mapa:drawLayer(mapa.layers["deco"])
+
     camaraPrincipal:detach()
     
 
