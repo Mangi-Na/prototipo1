@@ -18,6 +18,7 @@ function Enemigo:init(x, y, velocidad, ruta, mundo)
     self.hitbox_y = (self.y - self.origen_y) + 4
     
     self.mundo = mundo
+    self.es_enemigo = true
     if self.mundo then
         self.mundo:add(self, self.hitbox_x, self.hitbox_y, self.ancho_hitbox, self.alto_hitbox)
     end
@@ -25,7 +26,7 @@ end
 
 function Enemigo:Actualizar(dt, obj_jugador)
     if not self.activo or not obj_jugador then return end
-    
+
     local dx = obj_jugador.x - self.x
     local dy = obj_jugador.y - self.y
     local distancia = math.sqrt(dx * dx + dy * dy)

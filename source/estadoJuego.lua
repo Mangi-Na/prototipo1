@@ -1,11 +1,9 @@
 estadoJuego = Class{__includes = maquinaEstado}
 
 function estadoJuego:init()
-    -- Llamamos a la función para inicializar todo al crear el estado
     self:reiniciarJuego()
 end
 
--- Sacamos reiniciarJuego de init y la convertimos en un método de la clase
 function estadoJuego:reiniciarJuego()
     atrapado = false
     victoria = false
@@ -67,7 +65,7 @@ function estadoJuego:actualizar(dt)
     jugador_obj:Actualizar(dt)
     
     camaraPrincipal:lookAt(redondear(jugador_obj.x), redondear(jugador_obj.y))
-    
+        --límites de la camara
         -- Eje X (izquierda y derecha))
     if camaraPrincipal.x < ventana.camara_centro_x then
         camaraPrincipal.x = ventana.camara_centro_x
@@ -124,6 +122,18 @@ function estadoJuego:actualizar(dt)
             end
         end
     end
+    local x, y = jugador_obj.x, jugador_obj.y
+    local ancho, alto = jugador_obj.ancho, jugador_obj.alto
+
+    -- Filtro para buscar SOLO paredes del mapa
+    soloParedes = function(item)
+      return item.es_pared == true
+    end
+
+   -- Consulta en el mundo de Bump
+   local paredes_tocadas, cantidad = mundo:queryRect(x, y, ancho, alto, soloParedes)
+
+
 end
 
 function estadoJuego:dibujar()

@@ -37,16 +37,25 @@ function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
     lienzo = love.graphics.newCanvas(ventana.ancho, ventana.alto)
 
-    mundo = Bump.newWorld(16)
-
+   
     
     fuenteTitulo = love.graphics.newFont("fuentes/CordelCircoMambembe-Bold.ttf", 40)
     fuenteSubtitulo = love.graphics.newFont("fuentes/CordelCircoMambembe-Bold.ttf", 26)
 
+    mundo = Bump.newWorld(16)
     mapa = STI("mapa/mapa.lua", { "bump" })
     mapa:bump_init(mundo)
-    mapa = STI ("mapa/mapa.lua")
     camaraPrincipal = Camara()
+
+   
+    if mapa.layers ["colisiones"] then
+        for _, obj in ipairs(mapa.layers["colisiones"].objects) do
+            obj.es_pared = true
+            mundo:add(obj, obj.x, obj.y, obj.width, obj.height)
+        end
+    
+    end  
+
    
     --limites de camara
     ventana.camara_centro_x = ventana.ancho * 0.5
