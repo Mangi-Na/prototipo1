@@ -50,6 +50,7 @@ function Jugador:Atacar()
 end
 
 function Jugador:Actualizar(dt)
+    local dx, dy = 0, 0
     -- Movimiento y dirección
     if not self.atacando then
         if love.keyboard.isDown("right") then
@@ -66,6 +67,53 @@ function Jugador:Actualizar(dt)
             self.direccion = "up"
         end
         
+    end
+
+    -- Posición que desea alcanzar el personaje
+    local objetivo_x = self.x + (dx * self.velocidad * dt)
+    local objetivo_y = self.y + (dy * self.velocidad * dt)
+    
+    --Restringir dentro de los límites del mapa ANTES de consultar a Bump
+    if objetivo_x - self.origen_x < 0 then
+        objetivo_x = self.origen_x
+    elseif objetivo_x + self.origen_x > ventana.mapa_ancho then
+        objetivo_x = ventana.mapa_ancho - self.origen_x
+    end
+
+    if objetivo_y - self.origen_y < 0 then
+        objetivo_y = self.origen_y
+    elseif objetivo_y + self.origen_y > ventana.mapa_alto then
+        objetivo_y = ventana.mapa_alto - self.origen_y
+    end
+
+    local deseado_hitbox_x = objetivo_x - self.origen_x
+    local deseado_hitbox_y = objetivo_y - self.origen_y
+
+    local filtroJugador = function(item, otro)
+        if otro.es_pared then
+            return 'slide'
+        end
+        return nil
+    end
+
+    --Mover con Bump
+    if self.mundo then
+        local real_hitbox_x, real_hitbox_y, colisiones, len = self.mundo:move(
+            self, 
+            deseado_hitbox_x, 
+            deseado_hitbox_y, 
+            filtroJugador
+        )
+
+        self.hitbox_x = real_hitbox_x
+        self.hitbox_y = real_hitbox_y
+        self.x = self.hitbox_x + self.origen_x
+        self.y = self.hitbox_y + self.origen_y
+    else
+        self.x = objetivo_x
+        self.y = objetivo_y
+        self.hitbox_x = deseado_hitbox_x
+        self.hitbox_y = deseado_hitbox_y
     end
     
     -- LÍMITES DEL MAPA 

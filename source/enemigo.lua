@@ -6,7 +6,7 @@ function Enemigo:init(x, y, velocidad, ruta, mundo)
     self.velocidad = velocidad
     self.sprite = love.graphics.newImage(ruta)
     self.activo = true
-    
+        
     self.ancho = self.sprite:getWidth() 
     self.alto = self.sprite:getHeight()
     self.origen_x = self.ancho / 2  

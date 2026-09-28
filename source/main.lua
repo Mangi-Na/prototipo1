@@ -55,8 +55,8 @@ function love.load()
         end
     
     end  
-
-   
+    
+    
     --limites de camara
     ventana.camara_centro_x = ventana.ancho * 0.5
     ventana.camara_centro_y = ventana.alto * 0.5 -- Usa 'alto' para el eje Y
@@ -76,7 +76,7 @@ function love.load()
     maquinaEstadoGlobal = maquinaEstado({
         ['titulo'] = function() return estadoTitulo() end,
         ['jugar']  = function() return estadoJuego() end,
-        ['Fin']  = function() return estadoFin() end
+        ['fin']  = function() return estadoFin() end
     })
     
     -- Iniciar en la pantalla de título

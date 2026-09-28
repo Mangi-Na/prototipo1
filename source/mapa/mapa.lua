@@ -9,8 +9,8 @@ return {
   height = 20,
   tilewidth = 16,
   tileheight = 16,
-  nextlayerid = 9,
-  nextobjectid = 27,
+  nextlayerid = 11,
+  nextobjectid = 34,
   properties = {},
   tilesets = {
     {
@@ -399,7 +399,7 @@ return {
         },
         {
           id = 9,
-          name = "",
+          name = "p5",
           type = "",
           shape = "rectangle",
           x = 129.167,
@@ -413,7 +413,7 @@ return {
         },
         {
           id = 10,
-          name = "",
+          name = "p6",
           type = "",
           shape = "rectangle",
           x = 322.667,
@@ -427,7 +427,7 @@ return {
         },
         {
           id = 11,
-          name = "",
+          name = "p7",
           type = "",
           shape = "rectangle",
           x = 400.333,
@@ -441,7 +441,7 @@ return {
         },
         {
           id = 12,
-          name = "",
+          name = "p8",
           type = "",
           shape = "rectangle",
           x = 22,
@@ -455,7 +455,7 @@ return {
         },
         {
           id = 13,
-          name = "",
+          name = "p9",
           type = "",
           shape = "rectangle",
           x = 30.6667,
@@ -469,7 +469,7 @@ return {
         },
         {
           id = 14,
-          name = "",
+          name = "p10",
           type = "",
           shape = "rectangle",
           x = 28.6667,
@@ -483,7 +483,7 @@ return {
         },
         {
           id = 15,
-          name = "",
+          name = "p11",
           type = "",
           shape = "rectangle",
           x = 144.667,
@@ -497,7 +497,7 @@ return {
         },
         {
           id = 16,
-          name = "",
+          name = "p12",
           type = "",
           shape = "rectangle",
           x = 0.666667,
@@ -511,7 +511,7 @@ return {
         },
         {
           id = 17,
-          name = "",
+          name = "p13",
           type = "",
           shape = "rectangle",
           x = -1,
@@ -525,7 +525,7 @@ return {
         },
         {
           id = 18,
-          name = "",
+          name = "p14",
           type = "",
           shape = "rectangle",
           x = 145.667,
@@ -539,7 +539,7 @@ return {
         },
         {
           id = 19,
-          name = "",
+          name = "p15",
           type = "",
           shape = "rectangle",
           x = 29.6667,
@@ -553,7 +553,7 @@ return {
         },
         {
           id = 20,
-          name = "",
+          name = "p16",
           type = "",
           shape = "rectangle",
           x = 399.667,
@@ -567,7 +567,7 @@ return {
         },
         {
           id = 21,
-          name = "",
+          name = "p17",
           type = "",
           shape = "rectangle",
           x = 432.333,
@@ -581,7 +581,7 @@ return {
         },
         {
           id = 22,
-          name = "",
+          name = "p18",
           type = "",
           shape = "rectangle",
           x = 416.333,
@@ -595,7 +595,7 @@ return {
         },
         {
           id = 23,
-          name = "",
+          name = "p19",
           type = "",
           shape = "rectangle",
           x = 432,
@@ -609,7 +609,7 @@ return {
         },
         {
           id = 24,
-          name = "",
+          name = "p20",
           type = "",
           shape = "rectangle",
           x = 417,
@@ -623,7 +623,7 @@ return {
         },
         {
           id = 25,
-          name = "",
+          name = "p21",
           type = "",
           shape = "rectangle",
           x = 336.333,
@@ -637,13 +637,113 @@ return {
         },
         {
           id = 26,
-          name = "",
+          name = "p22",
           type = "",
           shape = "rectangle",
           x = 181,
           y = 80,
           width = 15,
           height = 16,
+          rotation = 0,
+          opacity = 1,
+          visible = true,
+          properties = {}
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      draworder = "topdown",
+      id = 9,
+      name = "generadores",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {
+        {
+          id = 27,
+          name = "rojo",
+          type = "",
+          shape = "rectangle",
+          x = 433.5,
+          y = 82.5,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          opacity = 1,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 28,
+          name = "verde",
+          type = "",
+          shape = "rectangle",
+          x = 69,
+          y = 204.5,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          opacity = 1,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 29,
+          name = "azul",
+          type = "",
+          shape = "rectangle",
+          x = 204,
+          y = 172,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          opacity = 1,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 31,
+          name = "verde",
+          type = "",
+          shape = "rectangle",
+          x = 67.5,
+          y = 167,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          opacity = 1,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 32,
+          name = "azul",
+          type = "",
+          shape = "rectangle",
+          x = 216.5,
+          y = 259.5,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          opacity = 1,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 33,
+          name = "rojo",
+          type = "",
+          shape = "rectangle",
+          x = 396,
+          y = 58,
+          width = 0,
+          height = 0,
           rotation = 0,
           opacity = 1,
           visible = true,
