@@ -3,7 +3,7 @@ estadoFin = Class{}
 function estadoFin:init() end
 
 function estadoFin:ingresar(params)
-    -- si fue victoria o derrota (si no recibe nada, asume false/derrota)
+    -- si fue victoria o derrota 
     self.victoria = params and params.victoria or false
 end
 

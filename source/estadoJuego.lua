@@ -9,6 +9,10 @@ end
 function estadoJuego:reiniciarJuego()
     atrapado = false
     victoria = false
+   
+       
+    tiempo_supervivencia = 15.0
+    audio_final_reproducido = false
     tiempo_supervivencia = 15.0
     audio_final_reproducido = false
 
@@ -148,6 +152,8 @@ function estadoJuego:actualizar(dt)
 
             if colision then
                 atrapado = true
+                self.vidas = self.vidas -1
+               
                 break
 
             end
@@ -189,6 +195,8 @@ function estadoJuego:dibujar()
 
     love.graphics.setCanvas()
     love.graphics.draw(lienzo, 0, 0, 0, ventana.escala, ventana.escala)
+    love.graphics.print(textoVida,300,10)
+
 
     -- Interfaz de Usuario
     love.graphics.print("Tiempo: " .. string.format("%.1f", tiempo_supervivencia), 20, 20)

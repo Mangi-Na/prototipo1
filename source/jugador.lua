@@ -13,7 +13,9 @@ function Jugador:init(x, y, mundo)
     -- Hitbox e integración con Bump
     self.hitbox_x = self.x - self.origen_x
     self.hitbox_y = self.y - self.origen_y
-   
+    self.vidas = 3
+     
+    love.event.push('actualizarVidas', self.vidas)
     self.mundo = mundo
     self.mundo:add(self, self.hitbox_x, self.hitbox_y, self.ancho, self.alto)
 

@@ -10,7 +10,7 @@ ventana = {
     mapa_alto = 0,
 }
 
--- Recursos globales (Audio y Lienzo)
+-- Recursos globales 
 musica = nil
 sonido_derrota = nil
 sonido_victoria = nil
@@ -20,6 +20,7 @@ funte = nil
 mapa = nil
 camaraPrincipal = nil
 mundo = nil
+textoVida = ""
 
 -- Función global auxiliar de colisiones
 function comprobarColision(x1, y1, ancho1, alto1, x2, y2, ancho2, alto2)
@@ -47,6 +48,14 @@ function love.load()
     mapa:bump_init(mundo)
     camaraPrincipal = Camara()
 
+    love.handler.actualizarVidas = UIVidas
+
+    function UIVidas(vidas)
+        vidas = vidas or 0
+        textoVida = "x"..vidas
+        
+    end
+
    
     if mapa.layers ["colisiones"] then
         for _, obj in ipairs(mapa.layers["colisiones"].objects) do
@@ -59,7 +68,7 @@ function love.load()
     
     --limites de camara
     ventana.camara_centro_x = ventana.ancho * 0.5
-    ventana.camara_centro_y = ventana.alto * 0.5 -- Usa 'alto' para el eje Y
+    ventana.camara_centro_y = ventana.alto * 0.5 
 
     -- Acceso correcto a las propiedades de los tiles en STI
     ventana.mapa_ancho = mapa.width * mapa.tilewidth
