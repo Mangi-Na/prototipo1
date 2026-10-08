@@ -14,8 +14,8 @@ function Jugador:init(x, y, mundo)
     self.hitbox_x = self.x - self.origen_x
     self.hitbox_y = self.y - self.origen_y
     self.vidas = 3
+    self.invulnerable = false
      
-    love.event.push('actualizarVidas', self.vidas)
     self.mundo = mundo
     self.mundo:add(self, self.hitbox_x, self.hitbox_y, self.ancho, self.alto)
 
@@ -177,6 +177,11 @@ function Jugador:Actualizar(dt)
 end
 
 function Jugador:Dibujar()
+    if self.invulnerable then
+        love.graphics.setColor(1, 0.3, 0.3, 1) -- Rojo si es invulnerable
+    else
+        love.graphics.setColor(1, 1, 1, 1)     -- Blanco (normal)
+    end
     love.graphics.draw(self.sprite, self.x, self.y, 0, 1, 1, self.origen_x, self.origen_y)
 
     if self.atacando then
@@ -187,4 +192,6 @@ function Jugador:Dibujar()
 
         love.graphics.draw(self.spritesheet_guante, quad, centro_x, centro_y, self.guante_rotacion, self.guante_scale_x, self.guante_scale_y, ox, oy)
     end
+    love.graphics.setColor(1, 1, 1, 1)
+    
 end

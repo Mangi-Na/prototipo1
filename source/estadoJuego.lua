@@ -10,7 +10,7 @@ function estadoJuego:reiniciarJuego()
     atrapado = false
     victoria = false
    
-       
+    self.invulnerable = false   
     tiempo_supervivencia = 15.0
     audio_final_reproducido = false
     tiempo_supervivencia = 15.0
@@ -150,16 +150,21 @@ function estadoJuego:actualizar(dt)
 
             )
 
-            if colision then
-                atrapado = true
-                self.vidas = self.vidas -1
-               
+          if colision then
+                if not jugador_obj.invulnerable then
+                    jugador_obj.invulnerable = true
+                    jugador_obj.vidas = jugador_obj.vidas - 1
+                    UIVidas(jugador_obj.vidas)
+
+                    if jugador_obj.vidas <= 0 then
+                        atrapado = true
+                    else
+                        Timer.after(4, function() jugador_obj.invulnerable = false end)
+                    end
+                end
                 break
-
             end
-
         end
-
     end
     local x, y = jugador_obj.x, jugador_obj.y
     local ancho, alto = jugador_obj.ancho, jugador_obj.alto

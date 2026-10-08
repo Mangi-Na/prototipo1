@@ -20,7 +20,7 @@ funte = nil
 mapa = nil
 camaraPrincipal = nil
 mundo = nil
-textoVida = ""
+textoVida = "x3"
 
 -- Función global auxiliar de colisiones
 function comprobarColision(x1, y1, ancho1, alto1, x2, y2, ancho2, alto2)
@@ -48,8 +48,7 @@ function love.load()
     mapa:bump_init(mundo)
     camaraPrincipal = Camara()
 
-    love.handler.actualizarVidas = UIVidas
-
+    
     function UIVidas(vidas)
         vidas = vidas or 0
         textoVida = "x"..vidas
@@ -94,6 +93,7 @@ end
 
 function love.update(dt)
     maquinaEstadoGlobal:actualizar(dt)
+    Timer.update(dt)
 end
 
 function love.draw()
