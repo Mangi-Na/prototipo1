@@ -21,6 +21,8 @@ function estadoJuego:reiniciarJuego()
     musica:play()
       -- Instanciación de Objetos con class
     jugador_obj = Jugador(ventana.ancho / 2, ventana.alto / 2, mundo)
+    self.hud = HUD(mundo)
+    self.hud:actualizarVidas(jugador_obj.vidas)
 
        -- Creación de la lista de enemigos utilizando polimorfismo
     lista_enemigos = {}
@@ -139,6 +141,7 @@ function estadoJuego:actualizar(dt)
 
     end
 
+    self.hud:actualizarTiempo(tiempo_supervivencia)
 
 
     -- Colisiones con el jugador (Condición de Derrota)
@@ -154,12 +157,12 @@ function estadoJuego:actualizar(dt)
                 if not jugador_obj.invulnerable then
                     jugador_obj.invulnerable = true
                     jugador_obj.vidas = jugador_obj.vidas - 1
-                    UIVidas(jugador_obj.vidas)
+                    self.hud:actualizarVidas(jugador_obj.vidas)
 
                     if jugador_obj.vidas <= 0 then
                         atrapado = true
                     else
-                        Timer.after(4, function() jugador_obj.invulnerable = false end)
+                        Timer.after(2, function() jugador_obj.invulnerable = false end)
                     end
                 end
                 break
@@ -200,7 +203,7 @@ function estadoJuego:dibujar()
 
     love.graphics.setCanvas()
     love.graphics.draw(lienzo, 0, 0, 0, ventana.escala, ventana.escala)
-    love.graphics.print(textoVida,300,10)
+    self.hud:Draw()
 
 
     -- Interfaz de Usuario

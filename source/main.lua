@@ -20,7 +20,7 @@ funte = nil
 mapa = nil
 camaraPrincipal = nil
 mundo = nil
-textoVida = "x3"
+
 
 -- Función global auxiliar de colisiones
 function comprobarColision(x1, y1, ancho1, alto1, x2, y2, ancho2, alto2)
@@ -48,14 +48,7 @@ function love.load()
     mapa:bump_init(mundo)
     camaraPrincipal = Camara()
 
-    
-    function UIVidas(vidas)
-        vidas = vidas or 0
-        textoVida = "x"..vidas
-        
-    end
-
-   
+     
     if mapa.layers ["colisiones"] then
         for _, obj in ipairs(mapa.layers["colisiones"].objects) do
             obj.es_pared = true
