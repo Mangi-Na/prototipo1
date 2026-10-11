@@ -41,7 +41,31 @@ function Jugador:init(x, y, mundo)
             self.spritesheet_guante:getDimensions()
         ))
     end
+    -- ATRIBUTOS DE COMBO Y FURIA
+    self.combo = 0
+    self.modo_furia = false
+    self.velocidad_base = 72
+    self.velocidad = self.velocidad_base
+
+    -- Registrar oyentes de eventos
+    Eventos.on('modo_furia', function(activo)
+        self.modo_furia = activo
+        if activo then
+            -- Aumentamos velocidad y tamaño del golpe en Furia
+            self.velocidad = self.velocidad_base * 1.5
+        else
+            self.velocidad = self.velocidad_base
+        end
+    end)
+
+    Eventos.on('combo_reiniciado', function()
+        self.combo = 0
+        if self.modo_furia then
+            Eventos.emitir('modo_furia', false)
+        end
+    end)
 end
+
 
 function Jugador:Atacar()
     if not self.atacando then
@@ -177,10 +201,14 @@ function Jugador:Actualizar(dt)
 end
 
 function Jugador:Dibujar()
+   -- Prioridad de color (Invulnerable > Furia > Normal)
     if self.invulnerable then
-        love.graphics.setColor(1, 0.3, 0.3, 1) -- Rojo si es invulnerable
+        love.graphics.setColor(1, 0.3, 0.3, 1) -- Rojo parpadeante/transparente
+    elseif self.modo_furia then
+        -- Tinte dorado en modo Furia
+        love.graphics.setColor(1, 0.7, 0.2, 1)
     else
-        love.graphics.setColor(1, 1, 1, 1)     -- Blanco (normal)
+        love.graphics.setColor(1, 1, 1, 1)
     end
     love.graphics.draw(self.sprite, self.x, self.y, 0, 1, 1, self.origen_x, self.origen_y)
 

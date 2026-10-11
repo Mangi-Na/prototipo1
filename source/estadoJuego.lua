@@ -125,6 +125,15 @@ function estadoJuego:actualizar(dt)
                     sonido_golpe:stop()
                     sonido_golpe:play()
                     e:RecibirGolpe(ventana.ancho, ventana.alto)
+                
+                    -- LÓGICA DE COMBO VÍA EVENTOS
+                    jugador_obj.combo = jugador_obj.combo + 1
+                     Eventos.emitir('enemigo_golpeado', jugador_obj.combo)
+
+                     -- Activar Modo Furia al llegar a 3 golpes seguidos
+                    if jugador_obj.combo >= 3 and not jugador_obj.modo_furia then
+                       Eventos.emitir('modo_furia', true)
+                    end
 
                 end
 
@@ -158,6 +167,8 @@ function estadoJuego:actualizar(dt)
                     jugador_obj.invulnerable = true
                     jugador_obj.vidas = jugador_obj.vidas - 1
                     self.hud:actualizarVidas(jugador_obj.vidas)
+                    -- Romper el combo al ser golpeado
+                    Eventos.emitir('combo_reiniciado')
 
                     if jugador_obj.vidas <= 0 then
                         atrapado = true
