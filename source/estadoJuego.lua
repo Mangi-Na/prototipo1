@@ -7,6 +7,9 @@ function estadoJuego:init()
 end
 
 function estadoJuego:reiniciarJuego()
+
+    -- LIMPIAR TODOS LOS EVENTOS REGISTRADOS ANTERIORMENTE
+    Eventos.limpiar()
     atrapado = false
     victoria = false
    
