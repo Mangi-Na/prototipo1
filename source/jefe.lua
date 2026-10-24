@@ -3,7 +3,8 @@ Jefe = Class{}
 function Jefe:init(x, y, mundo)
     self.x = x
     self.y = y
-    self.velocidad = 35
+    self.velocidad = 25
+    self.proyectiles = {}
     self.spritesheet = love.graphics.newImage("assets/jefe.png")
     self.total_cuadros = 5 
     self.ancho_frame = self.spritesheet:getWidth() / self.total_cuadros
@@ -74,6 +75,22 @@ function Jefe:init(x, y, mundo)
             for i = 1, 30 do
                 coroutine.yield()
             end
+            if jugador then
+                local dx = jugador.x - self.x
+                local dy = jugador.y - self.y
+                local distancia = math.sqrt(dx * dx + dy * dy)
+                
+                if distancia > 0 then
+                    -- Creamos un proyectil disparado hacia el jugador
+                    table.insert(self.proyectiles, {
+                        x = self.x,
+                        y = self.y,
+                        vx = (dx / distancia) * 120, -- Velocidad del proyectil
+                        vy = (dy / distancia) * 120,
+                        radio = 2
+                    })
+                end
+            end
 
             -- FASE 3: Descanso del jefe (Ventana de oportunidad para golpearlo)
             print("Jefe: llorando...")
@@ -90,6 +107,23 @@ function Jefe:Actualizar(dt, jugador)
         self.tiempo_invulnerable = self.tiempo_invulnerable - dt
         if self.tiempo_invulnerable <= 0 then
             self.invulnerable = false
+        end
+    end
+    -- Actualizar proyectiles del jefe
+    for i = #self.proyectiles, 1, -1 do
+        local p = self.proyectiles[i]
+        p.x = p.x + p.vx * dt
+        p.y = p.y + p.vy * dt
+
+        -- Si el proyectil choca con el jugador, le quita vida 
+        if jugador and math.sqrt((p.x - jugador.x)^2 + (p.y - jugador.y)^2) < 20 then
+            if not jugador.invulnerable then
+                jugador.invulnerable = true
+                jugador.vidas = jugador.vidas - 1
+                -- jugador.hud:actualizarVidas(jugador.vidas) -- Descomenta si tienes esto
+                Timer.after(2, function() jugador.invulnerable = false end)
+            end
+            table.remove(self.proyectiles, i)
         end
     end
 
@@ -145,4 +179,9 @@ function Jefe:Dibujar()
         0, 1.5, 1.5, 
         self.origen_x, self.origen_y
     )
+    love.graphics.setColor(0.55, 0.27, 0.07) -- Color marrón
+    for _, p in ipairs(self.proyectiles) do
+        love.graphics.circle("fill", p.x, p.y, p.radio)
+    end
+    love.graphics.setColor(1, 1, 1, 1) -- Restaurar color
 end
