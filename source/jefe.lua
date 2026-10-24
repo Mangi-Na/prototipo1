@@ -5,10 +5,16 @@ function Jefe:init(x, y, mundo)
     self.y = y
     self.velocidad = 25
     self.proyectiles = {}
-    self.spritesheet = love.graphics.newImage("assets/jefe.png")
+
+    self.sheet_combate = love.graphics.newImage("assets/jefe.png")
+    self.sheet_llanto = love.graphics.newImage("assets/jefe2.png")
+
+    -- Definimos explícitamente las texturas actuales desde el inicio
+    self.spritesheet_actual = self.sheet_combate 
+    
     self.total_cuadros = 5 
-    self.ancho_frame = self.spritesheet:getWidth() / self.total_cuadros
-    self.alto_frame = self.spritesheet:getHeight()
+    self.ancho_frame = self.sheet_combate:getWidth() / self.total_cuadros
+    self.alto_frame = self.sheet_combate:getHeight()
     
     self.ancho = self.ancho_frame
     self.alto = self.alto_frame
@@ -25,14 +31,30 @@ function Jefe:init(x, y, mundo)
     self.tiempo_animacion = 0
     self.duracion_cuadro = 0.15
     
-    self.quads = {}
+    self.quads_combate = {}
     for i = 0, self.total_cuadros - 1 do
-        table.insert(self.quads, love.graphics.newQuad(
+        table.insert(self.quads_combate, love.graphics.newQuad(
             i * self.ancho_frame, 0, 
             self.ancho_frame, self.alto_frame, 
-            self.spritesheet:getDimensions()
+            self.sheet_combate:getDimensions()
         ))
     end
+
+    self.total_cuadros_llanto = 5
+    self.ancho_frame_llanto = self.sheet_llanto:getWidth() / self.total_cuadros_llanto
+    self.alto_frame_llanto = self.sheet_llanto:getHeight()
+    
+    self.quads_llanto = {}
+    for i = 0, self.total_cuadros_llanto - 1 do
+        table.insert(self.quads_llanto, love.graphics.newQuad(
+            i * self.ancho_frame_llanto, 0, 
+            self.ancho_frame_llanto, self.alto_frame_llanto, 
+            self.sheet_llanto:getDimensions()
+        ))
+    end
+    
+    -- Empezamos usando los quads de combate
+    self.quads_actuales = self.quads_combate
     
     self.vidas = 10
     self.activo = true
@@ -51,9 +73,14 @@ function Jefe:init(x, y, mundo)
         local dt = dt_inicial
         local jugador = jugador_inicial
 
-       while self.activo do
-            -- FASE 1: Perseguir al jugador más lentamente y con pausas
-            print("Jefe: Persiguiendo con calma...")
+        while self.activo do
+            -- Aseguramos que al arrancar la fase esté en combate
+            self.spritesheet_actual = self.sheet_combate
+            self.quads_actuales = self.quads_combate
+            self.total_cuadros = 5
+            self.cuadro_actual = 1
+
+            -- Perseguir al jugador
             for i = 1, 150 do
                 dt, jugador = coroutine.yield()
                 
@@ -62,7 +89,6 @@ function Jefe:init(x, y, mundo)
                     local dy = jugador.y - self.y
                     local distancia = math.sqrt(dx * dx + dy * dy)
                     
-                    -- Solo persigue si estás a cierta distancia, para darle un respiro al jugador
                     if distancia > 15 then
                         self.x = self.x + (dx / distancia) * self.velocidad * dt
                         self.y = self.y + (dy / distancia) * self.velocidad * dt
@@ -70,32 +96,35 @@ function Jefe:init(x, y, mundo)
                 end
             end
 
-            -- FASE 2: Cargar un ataque 
-            print("Jefe: ¡to poop!")
+            -- Cargar un ataque 
             for i = 1, 30 do
-                coroutine.yield()
+                dt, jugador = coroutine.yield()
             end
+
             if jugador then
                 local dx = jugador.x - self.x
                 local dy = jugador.y - self.y
                 local distancia = math.sqrt(dx * dx + dy * dy)
                 
                 if distancia > 0 then
-                    -- Creamos un proyectil disparado hacia el jugador
                     table.insert(self.proyectiles, {
                         x = self.x,
                         y = self.y,
-                        vx = (dx / distancia) * 120, -- Velocidad del proyectil
+                        vx = (dx / distancia) * 120,
                         vy = (dy / distancia) * 120,
                         radio = 2
                     })
                 end
             end
 
-            -- FASE 3: Descanso del jefe (Ventana de oportunidad para golpearlo)
-            print("Jefe: llorando...")
-            for i = 1, 90 do 
-                coroutine.yield()
+            -- Descanso del jefe
+            self.spritesheet_actual = self.sheet_llanto
+            self.quads_actuales = self.quads_llanto
+            self.total_cuadros = self.total_cuadros_llanto
+            self.cuadro_actual = 1
+            
+            for i = 1, 120 do
+                dt, jugador = coroutine.yield()
             end
         end
     end)
@@ -135,7 +164,7 @@ function Jefe:Actualizar(dt, jugador)
         end
     end
 
-    -- Actualizar la animación del spritesheet fotograma a fotograma
+    -- Actualizar la animación del spritesheet 
     self.tiempo_animacion = self.tiempo_animacion + dt
     if self.tiempo_animacion >= self.duracion_cuadro then
         self.tiempo_animacion = 0
@@ -157,12 +186,11 @@ function Jefe:RecibirGolpe()
     self.vidas = self.vidas - 1
     self.invulnerable = true
     self.tiempo_invulnerable = 0.5 
-    print("¡Jefe golpeado! Vidas: " .. self.vidas)
-
+    
     if self.vidas <= 0 then
         self.activo = false
         self.mundo:remove(self)
-        print("¡ZZZ!")
+       
     end
 end
 
@@ -170,18 +198,19 @@ function Jefe:Dibujar()
     if not self.activo then return end
     
     love.graphics.setColor(1, 1, 1, 1)
-    local quad = self.quads[self.cuadro_actual]
+    local quad = self.quads_actuales[self.cuadro_actual]
     
-    -- Dibujamos usando el quad correspondiente del spritesheet
     love.graphics.draw(
-        self.spritesheet, quad, 
+        self.spritesheet_actual, quad, 
         self.x, self.y, 
         0, 1.5, 1.5, 
         self.origen_x, self.origen_y
     )
-    love.graphics.setColor(0.55, 0.27, 0.07) -- Color marrón
+
+    -- Dibujar los disparos
+    love.graphics.setColor(0.55, 0.27, 0.07)
     for _, p in ipairs(self.proyectiles) do
         love.graphics.circle("fill", p.x, p.y, p.radio)
     end
-    love.graphics.setColor(1, 1, 1, 1) -- Restaurar color
+    love.graphics.setColor(1, 1, 1, 1)
 end
