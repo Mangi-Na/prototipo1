@@ -3,7 +3,7 @@ Jefe = Class{}
 function Jefe:init(x, y, mundo)
     self.x = x
     self.y = y
-    self.velocidad = 50
+    self.velocidad = 35
     self.spritesheet = love.graphics.newImage("assets/jefe.png")
     self.total_cuadros = 5 
     self.ancho_frame = self.spritesheet:getWidth() / self.total_cuadros
@@ -46,12 +46,27 @@ function Jefe:init(x, y, mundo)
     self.es_pared = false
 
     -- Inicializar la co-rutina del jefe
-    self.hilo = coroutine.create(function()
-        while self.activo do
-            -- FASE 1: Esperar / Acechar al jugador
-            print("Jefe: Buscando al jugador...")
-            for i = 1, 60 do 
-                coroutine.yield()
+    self.hilo = coroutine.create(function(dt_inicial, jugador_inicial)
+        local dt = dt_inicial
+        local jugador = jugador_inicial
+
+       while self.activo do
+            -- FASE 1: Perseguir al jugador más lentamente y con pausas
+            print("Jefe: Persiguiendo con calma...")
+            for i = 1, 150 do
+                dt, jugador = coroutine.yield()
+                
+                if jugador then
+                    local dx = jugador.x - self.x
+                    local dy = jugador.y - self.y
+                    local distancia = math.sqrt(dx * dx + dy * dy)
+                    
+                    -- Solo persigue si estás a cierta distancia, para darle un respiro al jugador
+                    if distancia > 15 then
+                        self.x = self.x + (dx / distancia) * self.velocidad * dt
+                        self.y = self.y + (dy / distancia) * self.velocidad * dt
+                    end
+                end
             end
 
             -- FASE 2: Cargar un ataque 
@@ -78,9 +93,9 @@ function Jefe:Actualizar(dt, jugador)
         end
     end
 
-    -- Si la co-rutina sigue viva, la reanudamos
+    -- Reanudamos la co-rutina pasándole el dt y el jugador
     if self.activo and coroutine.status(self.hilo) ~= "dead" then
-        local success, err = coroutine.resume(self.hilo)
+        local success, err = coroutine.resume(self.hilo, dt, jugador)
         if not success then
             print("Error en co-rutina del Jefe: " .. tostring(err))
         end
@@ -107,8 +122,9 @@ function Jefe:RecibirGolpe()
 
     self.vidas = self.vidas - 1
     self.invulnerable = true
-    self.tiempo_invulnerable = 0.5 -- 0.5 segundos de inmunidad tras recibir un golpe
-    
+    self.tiempo_invulnerable = 0.5 
+    print("¡Jefe golpeado! Vidas: " .. self.vidas)
+
     if self.vidas <= 0 then
         self.activo = false
         self.mundo:remove(self)
