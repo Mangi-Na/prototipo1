@@ -37,8 +37,11 @@ function estadoJuego:reiniciarJuego()
         end
     end
 
-    -- Instanciamos al jefe pero lo dejamos inactivo al empezar
-    jefe_obj = Jefe(400, 200, mundo)
+    -- Instanciamos al jefe  
+    local mapa_centro_x = ventana.mapa_ancho / 2
+    local mapa_centro_y = ventana.mapa_alto / 2
+
+    jefe_obj = Jefe(mapa_centro_x, mapa_centro_y, mundo)
     jefe_obj.activo = false
 end
 
@@ -101,7 +104,6 @@ function estadoJuego:actualizar(dt)
             e:Actualizar(dt, jugador_obj)
         end
 
-        -- Temporizador de supervivencia inicial (15s)
         tiempo_supervivencia = tiempo_supervivencia - dt
 
         -- SI EL TIEMPO LLEGA A 0: Desaparecen comunes y aparece el Jefe
@@ -208,8 +210,8 @@ function estadoJuego:actualizar(dt)
     else
         -- Colisión con el Jefe
         local colisionJefe = comprobarColision(
-            jugador_obj.hitbox_x, jugador_obj.hitbox_y, jugador_obj.ancho, jugador_obj.alto,
-            jefe_obj.hitbox_x, jefe_obj.hitbox_y, jefe_obj.ancho, jefe_obj.alto
+        jugador_obj.hitbox_x, jugador_obj.hitbox_y, jugador_obj.ancho, jugador_obj.alto,
+        jefe_obj.hitbox_x, jefe_obj.hitbox_y, jefe_obj.ancho_hitbox, jefe_obj.alto_hitbox
         )
 
         if colisionJefe then
