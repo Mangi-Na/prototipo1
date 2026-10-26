@@ -9,6 +9,8 @@ function HUD:init(mundo)
     self.combo = 0
     self.modo_furia = false
 
+    self.imagen_corazon = love.graphics.newImage("assets/corazon.png")
+
     -- Suscribirse a los eventos de Combo y Furia
     Eventos.on('enemigo_golpeado', function(nuevo_combo)
         self.combo = nuevo_combo
@@ -55,14 +57,15 @@ function HUD:DrawGameData()
     love.graphics.setColor(1, 0.2, 0.3, 1) -- Color rojo rosado 
     local texto_corazones = ""
 
+    love.graphics.setColor(1, 1, 1, 1) -- Blanco para que la imagen mantenga sus colores originales
     local vidas_num = tonumber(self.vidas) or 0
+    local x_inicial = 500
+    local separacion = 30
 
-    for i = 1, self.vidas do
-        texto_corazones = texto_corazones .. "A "
+    -- Dibujamos un icono de corazón por cada vida que tenga el jugador
+    for i = 1, vidas_num do
+        love.graphics.draw(self.imagen_corazon, x_inicial + (i - 1) * separacion, 8)
     end
-    
-    love.graphics.print("VIDAS: " .. texto_corazones, 440, 10)
-    love.graphics.setColor(1, 1, 1, 1)
     love.graphics.print("PUNTOS: " .. self.puntos, 10, 10)
 
     -- Tiempo
