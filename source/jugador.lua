@@ -236,7 +236,7 @@ function Jugador:Dibujar()
         love.graphics.setColor(1, 1, 1, 1)
     end
     
-    -- Dibujar payaso con su respectivo cuadro de los 16
+    -- Dibujar payaso
     local quad_jugador = self.quads_jugador[self.cuadro_actual]
     love.graphics.draw(self.sprite, quad_jugador, self.x, self.y, 0, 1, 1, self.origen_x, self.origen_y)
     

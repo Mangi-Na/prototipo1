@@ -60,6 +60,8 @@ end
 function Enemigo:RecibirGolpe(ancho_ventana, alto_ventana)
     self.x = math.random(10, ancho_ventana - 10)
     self.y = math.random(10, alto_ventana - 10)
+
+    Eventos.emitir('enemigo_derrotado', 100) 
     
     self.hitbox_x = (self.x - self.origen_x) + 4
     self.hitbox_y = (self.y - self.origen_y) + 4

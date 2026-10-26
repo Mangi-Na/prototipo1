@@ -11,7 +11,7 @@ function estadoJuego:reiniciarJuego()
     victoria = false
    
     self.invulnerable = false   
-    tiempo_supervivencia = 15.0 -- 1. Tiempo inicial para sobrevivir a los comunes
+    tiempo_supervivencia = 15.0 -- Tiempo inicial para sobrevivir a los comunes
     audio_final_reproducido = false
 
     love.audio.stop(sonido_derrota)
@@ -95,11 +95,8 @@ function estadoJuego:actualizar(dt)
         camaraPrincipal.y = ventana.mapa_alto - ventana.camara_centro_y
     end
 
-    -------------------------------------------------------------------------
-    -- CAMBIO 1: DIVIDIR LA LÓGICA ENTRE FASE DE COMUNES Y FASE DEL JEFE
-    -------------------------------------------------------------------------
     if not jefe_obj.activo then
-        -- FASE 1: Actualizar enemigos comunes
+        -- Actualizar enemigos comunes
         for _, e in ipairs(lista_enemigos) do
             e:Actualizar(dt, jugador_obj)
         end
@@ -118,10 +115,10 @@ function estadoJuego:actualizar(dt)
             end
         end
     else
-        -- FASE 2: El jefe está activo, avanza su co-rutina
+        -- El jefe está activo, avanza su co-rutina
         jefe_obj:Actualizar(dt, jugador_obj)
 
-        -- Temporizador de la Fase 2 (Tiempo extra para el jefe)
+        -- Temporizador 2 (Tiempo extra para el jefe)
         tiempo_supervivencia = tiempo_supervivencia - dt
         if tiempo_supervivencia <= 0 then
             tiempo_supervivencia = 0
@@ -131,9 +128,8 @@ function estadoJuego:actualizar(dt)
 
     self.hud:actualizarTiempo(tiempo_supervivencia)
 
-    -------------------------------------------------------------------------
-    -- CAMBIO 2: CONTROLAR ATAQUE SEGÚN QUIÉN ESTÉ EN PANTALLA
-    -------------------------------------------------------------------------
+    -- CONTROLAR ATAQUE SEGÚN QUIÉN ESTÉ EN PANTALLA
+    
     if jugador_obj.atacando then
         if not jefe_obj.activo then
             -- Golpear enemigos comunes
@@ -170,7 +166,7 @@ function estadoJuego:actualizar(dt)
                 sonido_golpe:play()
                 jefe_obj:RecibirGolpe()
 
-                -- Si las vidas del jefe llegan a 0, ¡Victoria instantánea!
+                -- Si las vidas del jefe llegan a 0
                 if not jefe_obj.activo then
                     victoria = true
                 end
@@ -178,9 +174,8 @@ function estadoJuego:actualizar(dt)
         end
     end
 
-    -------------------------------------------------------------------------
-    -- CAMBIO 3: COLISIONES DE DERROTA (Daño del enemigo o del jefe al jugador)
-    -------------------------------------------------------------------------
+    -- COLISIONES DE DERROTA (Daño del enemigo o del jefe al jugador)
+    
     if not jefe_obj.activo then
         -- Colisión con enemigos comunes
         for _, e in ipairs(lista_enemigos) do
@@ -249,10 +244,8 @@ function estadoJuego:dibujar()
     -- Dibujar Entidades
     jugador_obj:Dibujar()
 
-    -------------------------------------------------------------------------
-    -- CAMBIO 4: DIBUJAR COMUNES O DIBUJAR AL JEFE EXCLUSIVAMENTE
-    -------------------------------------------------------------------------
-    if not jefe_obj.activo then
+    -- DIBUJAR COMUNES O DIBUJAR AL JEFE 
+        if not jefe_obj.activo then
         for _, e in ipairs(lista_enemigos) do
             if e.activo then
                 e:Dibujar()
@@ -268,7 +261,5 @@ function estadoJuego:dibujar()
     love.graphics.setCanvas()
     love.graphics.draw(lienzo, 0, 0, 0, ventana.escala, ventana.escala)
     self.hud:Draw()
-
-    -- Interfaz de Usuario (Muestra el tiempo restante de la fase actual)
-    love.graphics.print("Tiempo: " .. string.format("%.1f", tiempo_supervivencia), 20, 20)
+    
 end

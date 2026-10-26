@@ -56,7 +56,7 @@ function Jefe:init(x, y, mundo)
     -- Empezamos usando los quads de combate
     self.quads_actuales = self.quads_combate
     
-    self.vidas = 10
+    self.vidas = 5
     self.activo = true
     self.mundo = mundo
     self.invulnerable = false
@@ -166,6 +166,18 @@ function Jefe:Actualizar(dt, jugador)
             end
             table.remove(self.proyectiles, i)
         end
+        if jugador and self.activo then
+        local distancia_cuerpo = math.sqrt((self.x - jugador.x)^2 + (self.y - jugador.y)^2)
+        if distancia_cuerpo < (self.origen_hitbox_x + 10) then
+            if jugador.RecibirDanio then
+                jugador:RecibirDanio()
+            elseif not jugador.invulnerable then
+                jugador.vidas = jugador.vidas - 1
+                jugador.invulnerable = true
+                jugador.tiempo_invulnerable = 1.0
+            end
+        end
+    end
     end
 
     -- Reanudamos la co-rutina pasándole el dt y el jugador
