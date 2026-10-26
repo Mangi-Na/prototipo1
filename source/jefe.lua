@@ -9,7 +9,7 @@ function Jefe:init(x, y, mundo)
     self.sheet_combate = love.graphics.newImage("assets/jefe.png")
     self.sheet_llanto = love.graphics.newImage("assets/jefe2.png")
 
-    -- Definimos explícitamente las texturas actuales desde el inicio
+    -- Defino las texturas actuales desde el inicio
     self.spritesheet_actual = self.sheet_combate 
     
     self.total_cuadros = 5 
@@ -53,7 +53,7 @@ function Jefe:init(x, y, mundo)
         ))
     end
     
-    -- Empezamos usando los quads de combate
+    -- Empieza usando los quads de combate
     self.quads_actuales = self.quads_combate
     
     self.vidas = 5
@@ -74,7 +74,6 @@ function Jefe:init(x, y, mundo)
         local jugador = jugador_inicial
 
         while self.activo do
-            -- Aseguramos que al arrancar la fase esté en combate
             self.spritesheet_actual = self.sheet_combate
             self.quads_actuales = self.quads_combate
             self.total_cuadros = 5
@@ -161,7 +160,6 @@ function Jefe:Actualizar(dt, jugador)
             if not jugador.invulnerable then
                 jugador.invulnerable = true
                 jugador.vidas = jugador.vidas - 1
-                -- jugador.hud:actualizarVidas(jugador.vidas) -- Descomenta si tienes esto
                 Timer.after(2, function() jugador.invulnerable = false end)
             end
             table.remove(self.proyectiles, i)

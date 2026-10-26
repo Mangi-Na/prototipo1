@@ -3,7 +3,6 @@
 EnemigoRapido = Class{__includes = Enemigo}
 
 function EnemigoRapido:init(x, y, mundo)
-    -- Llama al init 
     Enemigo.init(self, x, y, 60, "assets/azul.png", mundo)
 end
 

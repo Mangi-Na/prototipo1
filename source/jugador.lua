@@ -5,11 +5,9 @@ function Jugador:init(x, y, mundo)
     self.y = y
     self.velocidad = 72
     
-    -- CONFIGURACIÓN DEL SPRITESHEET ANIMADO DEL PAYASO (16 cuadros)
     self.sprite = love.graphics.newImage("assets/payaso.png")
     self.total_cuadros = 16
     
-    -- 1. Calculamos el ancho y alto de cada cuadro ANTES de los quads
     self.ancho_frame = self.sprite:getWidth() / self.total_cuadros
     self.alto_frame = self.sprite:getHeight()
     
@@ -28,7 +26,7 @@ function Jugador:init(x, y, mundo)
     self.mundo = mundo
     self.mundo:add(self, self.hitbox_x, self.hitbox_y, self.ancho, self.alto)
 
-    -- 2. ANIMACIÓN DEL JUGADOR (Separada)
+    -- ANIMACIÓN DEL JUGADOR 
     self.cuadro_actual = 1
     self.tiempo_animacion = 0
     self.duracion_cuadro = 0.08
@@ -42,7 +40,7 @@ function Jugador:init(x, y, mundo)
         ))
     end
 
-    -- ATAQUE Y ANIMACIÓN DEL GUANTE (Variables independientes)
+    -- ATAQUE Y ANIMACIÓN DEL GUANTE 
     self.atacando = false
     self.spritesheet_guante = love.graphics.newImage("assets/guante.png")
     self.guante_ancho_frame = self.spritesheet_guante:getWidth() / 4
