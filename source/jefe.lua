@@ -81,7 +81,7 @@ function Jefe:init(x, y, mundo)
             self.cuadro_actual = 1
 
             -- Perseguir al jugador
-            for i = 1, 150 do
+            for i = 1, 250 do
                 dt, jugador = coroutine.yield()
                 
                 if jugador then
@@ -97,7 +97,7 @@ function Jefe:init(x, y, mundo)
             end
 
             -- Cargar un ataque 
-            for i = 1, 30 do
+            for i = 1, 60 do
                 dt, jugador = coroutine.yield()
             end
 
@@ -107,13 +107,25 @@ function Jefe:init(x, y, mundo)
                 local distancia = math.sqrt(dx * dx + dy * dy)
                 
                 if distancia > 0 then
-                    table.insert(self.proyectiles, {
-                        x = self.x,
-                        y = self.y,
-                        vx = (dx / distancia) * 120,
-                        vy = (dy / distancia) * 120,
-                        radio = 2
-                    })
+                    -- Calculamos el ángulo base hacia el jugador
+                    local angulo_base = math.atan2(dy, dx)
+                    local cantidad_proyectiles = 5
+                    local dispersion = 0.5 -- Ancho del abanico en radianes
+                    
+                    for j = 1, cantidad_proyectiles do
+                        -- Distribuimos los proyectiles en abanico alrededor del ángulo base
+                        local offset = -dispersion / 2 + (dispersion / (cantidad_proyectiles - 1)) * (j - 1)
+                        local angulo_final = angulo_base + offset
+                        local velocidad_bala = 110
+                        
+                        table.insert(self.proyectiles, {
+                            x = self.x,
+                            y = self.y,
+                            vx = math.cos(angulo_final) * velocidad_bala,
+                            vy = math.sin(angulo_final) * velocidad_bala,
+                            radio = 3
+                        })
+                    end
                 end
             end
 
@@ -123,7 +135,7 @@ function Jefe:init(x, y, mundo)
             self.total_cuadros = self.total_cuadros_llanto
             self.cuadro_actual = 1
             
-            for i = 1, 120 do
+            for i = 1, 180 do
                 dt, jugador = coroutine.yield()
             end
         end
